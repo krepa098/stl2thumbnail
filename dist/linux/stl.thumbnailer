@@ -1,4 +1,4 @@
 [Thumbnailer Entry]
 TryExec=/usr/bin/stl2thumbnail
 Exec=/usr/bin/stl2thumbnail -i %i -o %o -s %s
-MimeType=application/sla;
+MimeType=application/sla;model/x.stl-ascii;
