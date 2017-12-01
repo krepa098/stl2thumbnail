@@ -36,4 +36,4 @@ add_custom_command(
 target_link_libraries(${PROJECT_NAME} libstl png EGL GL dl)
 
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION "bin")
-install(FILES "stl.thumbnailer" DESTINATION "share/thumbnailers")
+install(FILES "dist/linux/stl.thumbnailer" DESTINATION "share/thumbnailers")
