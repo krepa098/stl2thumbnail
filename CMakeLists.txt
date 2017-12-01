@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(stl_thumbnailer)
+project(stl2thumbnail)
 
 add_subdirectory(libstl)
 
@@ -27,3 +27,5 @@ add_executable (
 )
 
 target_link_libraries(${PROJECT_NAME} libstl png EGL GL dl)
+
+install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION "bin")
