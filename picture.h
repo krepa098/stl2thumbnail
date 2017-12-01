@@ -18,6 +18,6 @@ public:
 private:
     Buffer m_buffer;
     unsigned m_size   = 0;
-    unsigned m_depth  = 3; // rgb
+    unsigned m_depth  = 4; // rgba
     unsigned m_stride = 0;
 };

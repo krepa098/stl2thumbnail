@@ -6,7 +6,7 @@ Picture::Picture(unsigned size)
     : m_size(size)
     , m_stride(size * m_depth)
 {
-    m_buffer.resize(size * m_stride); // rgb 8bit
+    m_buffer.resize(size * m_stride); // rgba 8bit
 }
 
 Byte* Picture::data()
@@ -22,7 +22,7 @@ void Picture::save(const std::string& filename)
     auto info_ptr = png_create_info_struct(png_ptr);
     png_init_io(png_ptr, fd);
     png_set_IHDR(png_ptr, info_ptr, m_size, m_size,
-        8, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE,
+        8, PNG_COLOR_TYPE_RGBA, PNG_INTERLACE_NONE,
         PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
     png_write_info(png_ptr, info_ptr);
 
@@ -47,4 +47,5 @@ void Picture::setRGB(unsigned x, unsigned y, Byte r, Byte g, Byte b)
     m_buffer[y * m_stride + x * m_depth + 0] = r;
     m_buffer[y * m_stride + x * m_depth + 1] = g;
     m_buffer[y * m_stride + x * m_depth + 2] = b;
+    m_buffer[y * m_stride + x * m_depth + 3] = 255;
 }

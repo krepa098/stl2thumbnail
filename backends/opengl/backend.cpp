@@ -17,6 +17,7 @@ OpenGLBackend::OpenGLBackend(unsigned size)
         EGL_BLUE_SIZE, 8,
         EGL_GREEN_SIZE, 8,
         EGL_RED_SIZE, 8,
+        EGL_ALPHA_SIZE, 8,
         EGL_DEPTH_SIZE, 8,
         EGL_RENDERABLE_TYPE, EGL_OPENGL_BIT,
         EGL_NONE
@@ -71,7 +72,7 @@ OpenGLBackend::OpenGLBackend(unsigned size)
     //https://learnopengl.com/#!Lighting/Basic-Lighting
     const std::string fragShader = R"(
     #version 330 core
-    out vec3 color;
+    out vec4 color;
     in vec3 normal;
     in vec3 fragPos;
     uniform vec3 modelColor;
@@ -89,7 +90,7 @@ OpenGLBackend::OpenGLBackend(unsigned size)
         vec3 specColor = pow(max(dot(viewDir, reflectDir), 0.0), 0.5) * specLightColor * 0.5;
         vec3 diffuseColor = max(0.0, dot(diffuseLightDir, normal)) * diffuseLightColor;
 
-        color = (ambientLightColor + diffuseColor + specColor) * modelColor;
+        color = vec4((ambientLightColor + diffuseColor + specColor) * modelColor, 1);
     }
     )";
 
@@ -164,11 +165,12 @@ Picture OpenGLBackend::render(const Mesh& triangles)
 
     auto viewproj = projection * view;
 
+    //clear
     glClearColor(m_backgroundColor.x, m_backgroundColor.y, m_backgroundColor.z, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glUseProgram(m_program);
 
     // setup program
+    glUseProgram(m_program);
     glUniformMatrix4fv(glGetUniformLocation(m_program, "viewproj"), 1, GL_FALSE, glm::value_ptr(viewproj));
     glUniformMatrix4fv(glGetUniformLocation(m_program, "model"), 1, GL_FALSE, glm::value_ptr(model));
     glUniform3fv(glGetUniformLocation(m_program, "diffuseLightDir"), 1, glm::value_ptr(glm::vec3{ 1.0f, 1.0f, -1.0f }));
@@ -220,7 +222,7 @@ Picture OpenGLBackend::render(const Mesh& triangles)
     glDisableVertexAttribArray(0);
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glReadPixels(0, 0, m_size, m_size, GL_RGB, GL_UNSIGNED_BYTE, pic.data());
+    glReadPixels(0, 0, m_size, m_size, GL_RGBA, GL_UNSIGNED_BYTE, pic.data());
 
     return pic;
 }
