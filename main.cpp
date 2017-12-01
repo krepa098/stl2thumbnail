@@ -12,8 +12,8 @@ int main(int argc, char** argv)
     args::HelpFlag help(parser, "help", "Display this help menu", { 'h', "help" });
 
     args::Group group(parser, "This group is all exclusive:", args::Group::Validators::All);
-    args::ValueFlag<std::string> in(group, "in", "The stl filename", { 'i' });
-    args::ValueFlag<std::string> out(group, "out", "The thumbnail picture filename", { 'o' });
+    args::Positional<std::string> in(group, "in", "The stl filename");
+    args::Positional<std::string> out(group, "out", "The thumbnail picture filename");
     args::ValueFlag<unsigned> picSize(group, "size", "The thumbnail size", { 's' });
 
     try
@@ -29,7 +29,7 @@ int main(int argc, char** argv)
     {
         std::cerr << e.what() << std::endl;
         std::cerr << parser;
-        return 1;
+        return 0;
     }
 
     // parse STL
