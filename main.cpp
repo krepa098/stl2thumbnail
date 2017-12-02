@@ -1,4 +1,3 @@
-#include <fstream>
 #include <iostream>
 #include <parser.h>
 
@@ -17,10 +16,6 @@ int main(int argc, char** argv)
     args::Positional<std::string> in(group, "in", "The stl filename");
     args::Positional<std::string> out(group, "out", "The thumbnail picture filename");
     args::ValueFlag<unsigned> picSize(group, "size", "The thumbnail size", { 's' });
-
-    std::ofstream log("/tmp/log.txt", std::ofstream::out);
-    log << "Args: " << in.Get() << " " << out.Get() << " " << picSize.Get() << "\n";
-    log.close();
 
     try
     {
