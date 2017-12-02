@@ -8,6 +8,7 @@ public:
     ZBuffer(unsigned size);
 
     bool testAndSet(unsigned x, unsigned y, float z);
+    unsigned size() const;
 
 private:
     unsigned m_size = 0;

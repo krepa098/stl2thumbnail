@@ -74,3 +74,8 @@ inline Vec3 cross(const Vec3& a, const Vec3& b)
         a.x * b.y - a.y * b.x
     };
 }
+
+inline Vec3 reflect(const Vec3& i, const Vec3& n)
+{
+    return i - 2.0f * dot(n, i) * n;
+}

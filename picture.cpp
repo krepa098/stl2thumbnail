@@ -2,6 +2,12 @@
 
 #include <png.h>
 
+Byte floatToByte(float v)
+{
+    v *= 255.0f;
+    return std::max(Byte(0), std::min(Byte(v), Byte(255)));
+}
+
 Picture::Picture(unsigned size)
     : m_size(size)
     , m_stride(size * m_depth)
@@ -55,9 +61,9 @@ void Picture::setRGB(unsigned x, unsigned y, float r, float g, float b)
     if (x >= m_size || y >= m_size)
         return;
 
-    m_buffer[y * m_stride + x * m_depth + 0] = r * 255;
-    m_buffer[y * m_stride + x * m_depth + 1] = g * 255;
-    m_buffer[y * m_stride + x * m_depth + 2] = b * 255;
+    m_buffer[y * m_stride + x * m_depth + 0] = floatToByte(r);
+    m_buffer[y * m_stride + x * m_depth + 1] = floatToByte(g);
+    m_buffer[y * m_stride + x * m_depth + 2] = floatToByte(b);
     m_buffer[y * m_stride + x * m_depth + 3] = 255;
 }
 
@@ -66,4 +72,9 @@ void Picture::fill(float r, float g, float b)
     for (unsigned y = 0; y < m_size; ++y)
         for (unsigned x = 0; x < m_size; ++x)
             setRGB(x, y, r, g, b);
+}
+
+unsigned Picture::size() const
+{
+    return m_size;
 }

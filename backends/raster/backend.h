@@ -18,5 +18,6 @@ private:
     Vec3 m_ambientColor    = { 0.3f, 0.3f, 0.3f };
     Vec3 m_diffuseColor    = { 0.4f, 0.4f, 0.4f };
     Vec3 m_specColor       = { 1.0f, 1.0f, 1.0f };
-    Vec3 m_backgroundColor = { 0.8f, 0.8f, 0.8f };
+    Vec3 m_backgroundColor = { 1.0f, 1.0f, 1.0f };
+    Vec3 m_lightPos        = { 1, 1, -2 };
 };

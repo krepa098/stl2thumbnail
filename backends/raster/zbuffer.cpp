@@ -21,3 +21,8 @@ bool ZBuffer::testAndSet(unsigned x, unsigned y, float z)
 
     return false;
 }
+
+unsigned ZBuffer::size() const
+{
+    return m_size;
+}

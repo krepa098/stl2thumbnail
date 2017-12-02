@@ -100,14 +100,24 @@ Picture RasterBackend::render(const Mesh& triangles)
 
                     // the z position at point p by interpolating the z position of all 3 vertices
                     float pz = w0 * v0.z + w1 * v1.z + w2 * v2.z;
+                    float px = w0 * v0.x + w1 * v1.x + w2 * v2.x;
+                    float py = w0 * v0.y + w1 * v1.y + w2 * v2.y;
 
                     if (m_zbuffer.testAndSet(x, y, pz))
                     {
-                        // calculate lighning
-                        Vec3 diffColor
-                            = std::max(0.0f, dot(t.normal, m_diffuseDir)) * m_diffuseColor;
+                        // calculate lightning
+                        // diffuse
+                        Vec3 diffColor = std::max(0.0f, dot(t.normal, m_diffuseDir)) * m_diffuseColor;
 
-                        Vec3 color = (m_ambientColor + diffColor) * m_modelColor;
+                        // specular
+                        Vec3 fragPos    = { px, py, pz };
+                        Vec3 lightDir   = (m_lightPos - fragPos).normalize();
+                        Vec3 viewDir    = (Vec3{ viewPos.x, viewPos.y, viewPos.z } - fragPos).normalize();
+                        Vec3 reflectDir = reflect(lightDir, t.normal);
+                        Vec3 specColor  = std::min(std::pow(std::max(dot(viewDir, reflectDir), 0.0f), 1.0f), 0.5f) * m_specColor;
+
+                        // merge
+                        Vec3 color = (m_ambientColor + diffColor + specColor) * m_modelColor;
 
                         pic.setRGB(x, y, color.x, color.y, color.z);
                     }
