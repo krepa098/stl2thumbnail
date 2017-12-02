@@ -6,6 +6,9 @@ AABBox::AABBox()
 
 AABBox::AABBox(const Mesh& triangles)
 {
+    lower = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
+    upper = { std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min() };
+
     for (const auto& t : triangles)
     {
         lower.x = std::min(std::min(lower.x, t.vertices[0].x), std::min(t.vertices[1].x, t.vertices[2].x));

@@ -2,6 +2,8 @@
 
 #include "triangle.h"
 
+#include <limits>
+
 struct AABBox
 {
     Vec3 lower;
