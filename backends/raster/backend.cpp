@@ -66,8 +66,8 @@ Picture RasterBackend::render(const Mesh& triangles)
         // bounding box in screen space
         unsigned sminX = static_cast<unsigned>(std::max(0, static_cast<int>((minX + 1.0f) / 2.0f * m_size)));
         unsigned sminY = static_cast<unsigned>(std::max(0, static_cast<int>((minY + 1.0f) / 2.0f * m_size)));
-        unsigned smaxX = static_cast<unsigned>(std::min(int(m_size), static_cast<int>((maxX + 1.0f) / 2.0f * m_size)));
-        unsigned smaxY = static_cast<unsigned>(std::min(int(m_size), static_cast<int>((maxY + 1.0f) / 2.0f * m_size)));
+        unsigned smaxX = static_cast<unsigned>(std::max(0, std::min(int(m_size), static_cast<int>((maxX + 1.0f) / 2.0f * m_size))));
+        unsigned smaxY = static_cast<unsigned>(std::max(0, std::min(int(m_size), static_cast<int>((maxY + 1.0f) / 2.0f * m_size))));
 
         for (unsigned y = sminY; y < smaxY + 1; ++y)
         {
