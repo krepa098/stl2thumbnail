@@ -106,14 +106,14 @@ Picture RasterBackend::render(const Mesh& triangles)
                     {
                         // calculate lightning
                         // diffuse
-                        Vec3 diffColor = std::max(0.0f, dot(t.normal, m_diffuseDir)) * m_diffuseColor;
+                        Vec3 diffColor = std::max(0.0f, dot(t.normal, m_lightPos.normalize())) * m_diffuseColor;
 
                         // specular
                         Vec3 fragPos    = { px, py, pz };
                         Vec3 lightDir   = (m_lightPos - fragPos).normalize();
                         Vec3 viewDir    = (Vec3{ viewPos.x, viewPos.y, viewPos.z } - fragPos).normalize();
-                        Vec3 reflectDir = reflect(lightDir, t.normal);
-                        Vec3 specColor  = std::pow(std::max(dot(viewDir, reflectDir), 0.0f), 1.0f) * m_specColor;
+                        Vec3 reflectDir = reflect(-lightDir, t.normal);
+                        Vec3 specColor  = std::pow(std::max(dot(viewDir, reflectDir), 0.0f), 14.0f) * m_specColor * 0.8f;
 
                         // merge
                         Vec3 color = (m_ambientColor + diffColor + specColor) * m_modelColor;
