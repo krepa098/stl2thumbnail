@@ -40,9 +40,18 @@ int main(int argc, char** argv)
 
     // parse STL
     stl::Parser stlParser;
-    auto triangles = stlParser.parseFile(in.Get());
+    Mesh mesh;
+    try
+    {
+        mesh = stlParser.parseFile(in.Get());
+    }
+    catch (...)
+    {
+        std::cerr << "Cannot parse file " << in.Get();
+        return 1;
+    }
 
-    std::cout << "Triangles: " << triangles.size() << std::endl;
+    std::cout << "Triangles: " << mesh.size() << std::endl;
 
     // render using openGL backend
     //    OpenGLBackend backend(picSize.Get());
@@ -50,7 +59,7 @@ int main(int argc, char** argv)
 
     // render using raster backend
     RasterBackend backend(picSize.Get());
-    auto pic = backend.render(triangles);
+    auto pic = backend.render(mesh);
 
     // save to disk
     pic.save(out.Get());
