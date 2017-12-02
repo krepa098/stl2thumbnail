@@ -79,9 +79,6 @@ Picture RasterBackend::render(const Mesh& triangles)
                 const float nx = 2.f * (x / static_cast<float>(m_size) - 0.5f);
                 const float ny = 2.f * (y / static_cast<float>(m_size) - 0.5f);
 
-                //const float nx = x / static_cast<float>(m_size);
-                //const float ny = y / static_cast<float>(m_size);
-
                 auto P  = glm::vec2{ nx, ny };
                 auto V0 = glm::vec2(v0);
                 auto V1 = glm::vec2(v1);
@@ -116,11 +113,12 @@ Picture RasterBackend::render(const Mesh& triangles)
                         Vec3 lightDir   = (m_lightPos - fragPos).normalize();
                         Vec3 viewDir    = (Vec3{ viewPos.x, viewPos.y, viewPos.z } - fragPos).normalize();
                         Vec3 reflectDir = reflect(lightDir, t.normal);
-                        Vec3 specColor  = std::min(std::pow(std::max(dot(viewDir, reflectDir), 0.0f), 1.0f), 0.5f) * m_specColor;
+                        Vec3 specColor  = std::pow(std::max(dot(viewDir, reflectDir), 0.0f), 1.0f) * m_specColor;
 
                         // merge
                         Vec3 color = (m_ambientColor + diffColor + specColor) * m_modelColor;
 
+                        // output pixel color
                         pic.setRGB(x, y, color.x, color.y, color.z);
                     }
                 }

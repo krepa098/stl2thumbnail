@@ -14,14 +14,10 @@ struct Vec3
         return std::sqrt(x * x + y * y + z * z);
     }
 
-    Vec3 normalize()
+    Vec3 normalize() const
     {
         float l = length();
-        x /= l;
-        y /= l;
-        z /= l;
-
-        return *this;
+        return { x / l, y / l, z / l };
     }
 
     friend std::ostream& operator<<(std::ostream& out, const Vec3& v)

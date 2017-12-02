@@ -4,8 +4,8 @@
 
 Byte floatToByte(float v)
 {
-    v *= 255.0f;
-    return std::max(Byte(0), std::min(Byte(v), Byte(255)));
+    v = std::max(0.0f, std::min(v, 1.0f));
+    return Byte(v * 255.0f);
 }
 
 Picture::Picture(unsigned size)
@@ -34,7 +34,7 @@ void Picture::save(const std::string& filename)
 
     for (size_t row = 0; row < m_size; ++row)
     {
-        png_write_row(png_ptr, m_buffer.data() + row * m_stride);
+        png_write_row(png_ptr, &m_buffer[row * m_stride]);
     }
 
     png_write_end(png_ptr, nullptr);
