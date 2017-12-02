@@ -24,6 +24,10 @@ add_executable (
     "backends/opengl/backend.h"
     "backends/opengl/glad.c"
     "backends/opengl/glad.h"
+    "backends/raster/backend.cpp"
+    "backends/raster/backend.h"
+    "backends/raster/zbuffer.cpp"
+    "backends/raster/zbuffer.h"
 )
 
 add_custom_command(

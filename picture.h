@@ -14,6 +14,9 @@ public:
     Byte* data();
     void save(const std::string& filename);
     void setRGB(unsigned x, unsigned y, Byte r, Byte g, Byte b);
+    void setRGB(unsigned x, unsigned y, float r, float g, float b);
+
+    void fill(float r, float g, float b);
 
 private:
     Buffer m_buffer;

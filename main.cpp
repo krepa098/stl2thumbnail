@@ -1,8 +1,10 @@
+#include <fstream>
 #include <iostream>
 #include <parser.h>
 
 #include "args.hxx"
 #include "backends/opengl/backend.h"
+#include "backends/raster/backend.h"
 #include "picture.h"
 
 int main(int argc, char** argv)
@@ -15,6 +17,10 @@ int main(int argc, char** argv)
     args::Positional<std::string> in(group, "in", "The stl filename");
     args::Positional<std::string> out(group, "out", "The thumbnail picture filename");
     args::ValueFlag<unsigned> picSize(group, "size", "The thumbnail size", { 's' });
+
+    std::ofstream log("/tmp/log.txt", std::ofstream::out);
+    log << "Args: " << in.Get() << " " << out.Get() << " " << picSize.Get() << "\n";
+    log.close();
 
     try
     {
@@ -44,7 +50,11 @@ int main(int argc, char** argv)
     std::cout << "Triangles: " << triangles.size() << std::endl;
 
     // render using openGL backend
-    OpenGLBackend backend(picSize.Get());
+    //    OpenGLBackend backend(picSize.Get());
+    //    auto pic = backend.render(triangles);
+
+    // render using raster backend
+    RasterBackend backend(picSize.Get());
     auto pic = backend.render(triangles);
 
     // save to disk
