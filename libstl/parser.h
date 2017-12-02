@@ -18,8 +18,8 @@ private:
     Mesh parseBinary(std::ifstream& in) const;
     Mesh parseAscii(std::ifstream& in) const;
 
-    u_int32_t readU32(std::ifstream& in) const;
-    u_int16_t readU16(std::ifstream& in) const;
+    uint32_t readU32(std::ifstream& in) const;
+    uint16_t readU16(std::ifstream& in) const;
     float readFloat(std::ifstream& in) const;
 
     Vec3 readVector3(std::ifstream& in) const;

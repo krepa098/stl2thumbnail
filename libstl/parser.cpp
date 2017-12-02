@@ -36,6 +36,7 @@ bool Parser::isBinaryFormat(std::ifstream& in) const
     getLineTrimmed(in, line); // has to start with "facet" otherwise it is a binary file
 
     // return to begin of file
+    in.clear();
     in.seekg(0, in.beg);
 
     return line.substr(0, 5) != "facet";
@@ -44,17 +45,16 @@ bool Parser::isBinaryFormat(std::ifstream& in) const
 Mesh Parser::parseBinary(std::ifstream& in) const
 {
     // skip header
-    in.seekg(HEADER_SIZE, in.beg);
+    in.seekg(HEADER_SIZE);
 
     Mesh triangles;
 
     // get the number of triangles in the stl
-    u_int32_t triangleCount = readU32(in);
-
+    uint32_t triangleCount = readU32(in);
     triangles.reserve(triangleCount);
 
     // parse triangles
-    for (size_t i = 0; i < triangleCount; ++i)
+    for (size_t i = 0; i < triangleCount && in; ++i)
     {
         Triangle triangle = readBinaryTriangle(in);
 
@@ -80,16 +80,16 @@ Mesh Parser::parseAscii(std::ifstream& in) const
     return triangles;
 }
 
-u_int32_t Parser::readU32(std::ifstream& in) const
+uint32_t Parser::readU32(std::ifstream& in) const
 {
-    u_int32_t v;
+    uint32_t v;
     in.read(reinterpret_cast<char*>(&v), sizeof(v));
     return v;
 }
 
-u_int16_t Parser::readU16(std::ifstream& in) const
+uint16_t Parser::readU16(std::ifstream& in) const
 {
-    u_int16_t v;
+    uint16_t v;
     in.read(reinterpret_cast<char*>(&v), sizeof(v));
     return v;
 }
