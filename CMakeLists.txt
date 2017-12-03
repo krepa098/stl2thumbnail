@@ -19,18 +19,19 @@ add_executable (
     "aabb.h"
     "vec3.h"
     "vec4.h"
-    "args.hxx"
-    "triangle.cpp"
     "triangle.h"
     "backends/backend.h"
     "backends/opengl/backend.cpp"
     "backends/opengl/backend.h"
-    "backends/opengl/glad.c"
-    "backends/opengl/glad.h"
     "backends/raster/backend.cpp"
     "backends/raster/backend.h"
     "backends/raster/zbuffer.cpp"
     "backends/raster/zbuffer.h"
+
+    # 3rd party
+    "args.hxx"
+    "backends/opengl/glad.c"
+    "backends/opengl/glad.h"
 )
 
 add_custom_command(
