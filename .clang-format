@@ -1,0 +1,4 @@
+BasedOnStyle: WebKit
+BreakBeforeBraces: Allman
+BreakStringLiterals: 'true'
+AlignConsecutiveAssignments: 'true'
