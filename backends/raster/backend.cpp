@@ -50,21 +50,17 @@ RasterBackend::~RasterBackend()
 
 Picture RasterBackend::render(const Mesh& triangles)
 {
-    // Rasterizer based on
-    // https://www.scratchapixel.com/lessons/3d-basic-rendering/rasterization-practical-implementation
-
     ZBuffer m_zbuffer(m_size);
     Picture pic(m_size);
     pic.fill(m_backgroundColor.x, m_backgroundColor.y, m_backgroundColor.z, m_backgroundColor.w);
 
     // generate AABB and find its center
-    auto aabb           = AABBox(triangles);
-    float largestStride = aabb.largestStride();
-    auto center         = vec3ToGlm(aabb.center()) / largestStride;
-
-    float zoom = 0.7f;
+    auto aabb          = AABBox(triangles);
+    auto largestStride = aabb.largestStride();
+    auto center        = vec3ToGlm(aabb.center()) / largestStride;
 
     // create model view projection matrix
+    const float zoom   = 0.7f;
     auto projection    = glm::ortho(-zoom, zoom, -zoom, zoom, 0.001f, 3.0f);
     auto viewPos       = glm::vec3{ 1.f, -1.f, 1.f };
     auto view          = glm::lookAt(viewPos, glm::vec3{ 0.f, 0.f, 0.f }, { 0.f, 0.f, -1.f });

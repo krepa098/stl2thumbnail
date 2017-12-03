@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../backend.h"
 #include "vec4.h"
 
+// A rasterizer based on
+// https://www.scratchapixel.com/lessons/3d-basic-rendering/rasterization-practical-implementation
 class RasterBackend : public Backend
 {
 public:
@@ -28,7 +30,6 @@ public:
 
     Picture render(const Mesh& triangles);
 
-protected:
 private:
     unsigned m_size        = 0;
     Vec3 m_modelColor      = { 1.0f, 0.925f, 0.208f };
