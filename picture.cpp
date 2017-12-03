@@ -45,7 +45,7 @@ void Picture::save(const std::string& filename)
     fclose(fd);
 }
 
-void Picture::setRGB(unsigned x, unsigned y, Byte r, Byte g, Byte b)
+void Picture::setRGB(unsigned x, unsigned y, Byte r, Byte g, Byte b, Byte a)
 {
     if (x >= m_size || y >= m_size)
         return;
@@ -53,10 +53,10 @@ void Picture::setRGB(unsigned x, unsigned y, Byte r, Byte g, Byte b)
     m_buffer[y * m_stride + x * m_depth + 0] = r;
     m_buffer[y * m_stride + x * m_depth + 1] = g;
     m_buffer[y * m_stride + x * m_depth + 2] = b;
-    m_buffer[y * m_stride + x * m_depth + 3] = 255;
+    m_buffer[y * m_stride + x * m_depth + 3] = a;
 }
 
-void Picture::setRGB(unsigned x, unsigned y, float r, float g, float b)
+void Picture::setRGB(unsigned x, unsigned y, float r, float g, float b, float a)
 {
     if (x >= m_size || y >= m_size)
         return;
@@ -64,14 +64,15 @@ void Picture::setRGB(unsigned x, unsigned y, float r, float g, float b)
     m_buffer[y * m_stride + x * m_depth + 0] = floatToByte(r);
     m_buffer[y * m_stride + x * m_depth + 1] = floatToByte(g);
     m_buffer[y * m_stride + x * m_depth + 2] = floatToByte(b);
-    m_buffer[y * m_stride + x * m_depth + 3] = 255;
+    m_buffer[y * m_stride + x * m_depth + 3] = floatToByte(a);
+    ;
 }
 
-void Picture::fill(float r, float g, float b)
+void Picture::fill(float r, float g, float b, float a)
 {
     for (unsigned y = 0; y < m_size; ++y)
         for (unsigned x = 0; x < m_size; ++x)
-            setRGB(x, y, r, g, b);
+            setRGB(x, y, r, g, b, a);
 }
 
 unsigned Picture::size() const

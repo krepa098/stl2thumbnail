@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../backend.h"
+#include "vec4.h"
 
 class RasterBackend : public Backend
 {
@@ -17,6 +18,6 @@ private:
     Vec3 m_ambientColor    = { 0.3f, 0.3f, 0.3f };
     Vec3 m_diffuseColor    = { 0.5f, 0.5f, 0.5f };
     Vec3 m_specColor       = { 1.0f, 1.0f, 1.0f };
-    Vec3 m_backgroundColor = { 1.0f, 1.0f, 1.0f };
+    Vec4 m_backgroundColor = { 1.0f, 1.0f, 1.0f, 0.0f };
     Vec3 m_lightPos        = { 4, -2, 2 };
 };

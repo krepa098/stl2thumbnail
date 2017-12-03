@@ -1,9 +1,10 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.1)
 
-project(libstl)
+project(stl)
+
 add_library(
     ${PROJECT_NAME}
     "parser.h"
     "parser.cpp"
     "helpers.h"
-    )
+)

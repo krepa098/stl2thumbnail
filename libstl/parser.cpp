@@ -138,7 +138,7 @@ Triangle Parser::readBinaryTriangle(std::ifstream& in) const
 {
     Triangle t;
 
-    t.normal      = readVector3(in);
+    t.normal      = readVector3(in).normalize();
     t.vertices[0] = readVector3(in);
     t.vertices[1] = readVector3(in);
     t.vertices[2] = readVector3(in);

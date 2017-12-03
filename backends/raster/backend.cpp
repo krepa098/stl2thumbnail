@@ -36,7 +36,7 @@ Picture RasterBackend::render(const Mesh& triangles)
 
     ZBuffer m_zbuffer(m_size);
     Picture pic(m_size);
-    pic.fill(m_backgroundColor.x, m_backgroundColor.y, m_backgroundColor.z);
+    pic.fill(m_backgroundColor.x, m_backgroundColor.y, m_backgroundColor.z, m_backgroundColor.w);
 
     // generate AABB and find its center
     auto aabb           = AABBox(triangles);
@@ -85,9 +85,9 @@ Picture RasterBackend::render(const Mesh& triangles)
                 auto V2 = glm::vec2(v2);
 
                 bool inside = true;
-                inside &= edgeFunction(P, V0, V1) < 0.0f;
-                inside &= edgeFunction(P, V1, V2) < 0.0f;
-                inside &= edgeFunction(P, V2, V0) < 0.0f;
+                inside &= edgeFunction(P, V0, V1) <= 0.0f;
+                inside &= edgeFunction(P, V1, V2) <= 0.0f;
+                inside &= edgeFunction(P, V2, V0) <= 0.0f;
 
                 if (inside)
                 {

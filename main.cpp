@@ -53,10 +53,6 @@ int main(int argc, char** argv)
 
     std::cout << "Triangles: " << mesh.size() << std::endl;
 
-    // render using openGL backend
-    //    OpenGLBackend backend(picSize.Get());
-    //    auto pic = backend.render(triangles);
-
     // render using raster backend
     RasterBackend backend(picSize.Get());
     auto pic = backend.render(mesh);

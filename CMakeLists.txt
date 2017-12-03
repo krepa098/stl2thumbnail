@@ -1,4 +1,6 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.1)
+
+set (CMAKE_CXX_STANDARD 14)
 
 project(stl2thumbnail)
 
@@ -16,6 +18,7 @@ add_executable (
     "aabb.cpp"
     "aabb.h"
     "vec3.h"
+    "vec4.h"
     "args.hxx"
     "triangle.cpp"
     "triangle.h"
@@ -37,7 +40,7 @@ add_custom_command(
                 ${CMAKE_CURRENT_BINARY_DIR}/stl.thumbnailer
 )
 
-target_link_libraries(${PROJECT_NAME} libstl png EGL GL dl)
+target_link_libraries(${PROJECT_NAME} stl png EGL GL dl)
 
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION "bin")
 install(FILES "dist/linux/stl.thumbnailer" DESTINATION "share/thumbnailers")
