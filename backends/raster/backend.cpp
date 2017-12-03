@@ -128,7 +128,7 @@ Picture RasterBackend::render(const Mesh& triangles)
                         Vec3 lightDir   = (m_lightPos - fragPos).normalize();
                         Vec3 viewDir    = (Vec3{ viewPos.x, viewPos.y, viewPos.z } - fragPos).normalize();
                         Vec3 reflectDir = reflect(-lightDir, t.normal);
-                        Vec3 specColor  = std::pow(std::max(dot(viewDir, reflectDir), 0.0f), 14.0f) * m_specColor * 0.8f;
+                        Vec3 specColor  = std::pow(std::max(dot(viewDir, reflectDir), 0.0f), 14.0f) * m_specColor * 0.5f;
 
                         // merge
                         Vec3 color = (m_ambientColor + diffColor + specColor) * m_modelColor;
