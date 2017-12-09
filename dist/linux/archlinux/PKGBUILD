@@ -5,21 +5,21 @@ pkgname=stl2thumbnail-git
 pkgver=20171203
 pkgrel=1
 pkgdesc="Allow file managers to geterate thumbnails for stl files"
-arch=('i686' 'x86_64')
-url='https://github.com/krepa098/stl2thumbnail'
-license=('GPL')
+arch=("i686" "x86_64")
+url="https://github.com/krepa098/stl2thumbnail"
+license=("GPL")
 groups=()
-depends=('libpng')
-makedepends=('git' 'cmake' 'glm')
+depends=("libpng")
+makedepends=("git" "cmake" "glm")
 source=("$_pkgname::git+$url.git#branch=master")
-md5sums=('SKIP')
+md5sums=("SKIP")
 
 _gitname="stl2thumbnail"
 _gitbranch="master"
 
 pkgver() {
   cd "${_pkgname}"
-  git show -s --format="%ci" HEAD | sed -e 's/-//g' -e 's/ .*//'
+  git show -s --format="%ci" HEAD | sed -e "s/-//g" -e "s/ .*//"
 }
 
 build() {
@@ -35,5 +35,5 @@ prepare() {
 
 package() {
   cd "${_pkgname}/build"
-  make DESTDIR="$pkgdir/" install
+  make DESTDIR="{$pkgdir}/" install
 }
