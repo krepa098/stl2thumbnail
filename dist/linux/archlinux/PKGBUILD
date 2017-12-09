@@ -18,24 +18,22 @@ _gitname="stl2thumbnail"
 _gitbranch="master"
 
 pkgver() {
-  cd $_pkgname
+  cd "${_pkgname}"
   git show -s --format="%ci" HEAD | sed -e 's/-//g' -e 's/ .*//'
 }
 
 build() {
-  cd "$_pkgname/build"
+  cd "${_pkgname}/build"
   cmake .. -DCMAKE_INSTALL_PREFIX="/usr"
-  #cmake --build . --config Release --target install
-  make $MAKEFLAGS
+  cmake --build . --config Release
 }
 
 prepare() {
-  cd $_pkgname
+  cd "${_pkgname}"
   mkdir -p build
-  install -d bin
 }
 
 package() {
   cd "${_pkgname}/build"
-  make DESTDIR="$pkgdir" install
+  make DESTDIR="$pkgdir/" install
 }
