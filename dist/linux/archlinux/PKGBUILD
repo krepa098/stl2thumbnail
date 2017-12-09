@@ -9,7 +9,7 @@ arch=('i686' 'x86_64')
 url='https://github.com/krepa098/stl2thumbnail'
 license=('GPL')
 groups=()
-depends=()
+depends=('libpng')
 makedepends=('git' 'cmake' 'glm')
 source=("$_pkgname::git+$url.git#branch=master")
 md5sums=('SKIP')
