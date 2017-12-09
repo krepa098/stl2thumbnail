@@ -2,7 +2,7 @@
 
 _pkgname=stl2thumbnail
 pkgname=stl2thumbnail-git
-pkgver=20171203
+pkgver=v0.1.r0.gc4f8966
 pkgrel=1
 pkgdesc="Allow file managers to geterate thumbnails for stl files"
 arch=("i686" "x86_64")
@@ -19,7 +19,7 @@ _gitbranch="master"
 
 pkgver() {
   cd "${_pkgname}"
-  git show -s --format="%ci" HEAD | sed -e "s/-//g" -e "s/ .*//"
+  git describe --long | sed "s/\([^-]*-g\)/r\1/;s/-/./g"
 }
 
 build() {
