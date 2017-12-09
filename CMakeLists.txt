@@ -21,8 +21,6 @@ add_executable (
     "vec4.h"
     "triangle.h"
     "backends/backend.h"
-    "backends/opengl/backend.cpp"
-    "backends/opengl/backend.h"
     "backends/raster/backend.cpp"
     "backends/raster/backend.h"
     "backends/raster/zbuffer.cpp"
@@ -30,8 +28,6 @@ add_executable (
 
     # 3rd party
     "args.hxx"
-    "backends/opengl/glad.c"
-    "backends/opengl/glad.h"
 )
 
 add_custom_command(
@@ -41,7 +37,7 @@ add_custom_command(
                 ${CMAKE_CURRENT_BINARY_DIR}/stl.thumbnailer
 )
 
-target_link_libraries(${PROJECT_NAME} stl png EGL GL dl)
+target_link_libraries(${PROJECT_NAME} stl png)
 
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION "bin")
 install(FILES "dist/linux/stl.thumbnailer" DESTINATION "share/thumbnailers")

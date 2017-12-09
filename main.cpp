@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <parser.h>
 
 #include "args.hxx"
-#include "backends/opengl/backend.h"
 #include "backends/raster/backend.h"
 #include "picture.h"
 
