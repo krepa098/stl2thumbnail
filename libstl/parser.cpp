@@ -49,8 +49,8 @@ bool Parser::isBinaryFormat(std::ifstream& in) const
     // Some exporters put "solid <name>" in the binary header
 
     std::string line;
-    getLineTrimmed(in, line); // skip potential string: solid <name>
-    getLineTrimmed(in, line); // has to start with "facet" otherwise it is a binary file
+    getTrimmedLine(in, line); // skip potential string: solid <name>
+    getTrimmedLine(in, line); // has to start with "facet" otherwise it is a binary file
 
     // return to begin of file
     in.clear();
@@ -134,14 +134,14 @@ Triangle Parser::readAsciiTriangle(std::ifstream& in) const
 
     std::string line;
 
-    getLineTrimmed(in, line);
+    getTrimmedLine(in, line);
     std::sscanf(line.c_str(), "facet normal %e %e %e", &t.normal.x, &t.normal.y, &t.normal.z);
 
     std::getline(in, line); // outer loop
 
     for (size_t i = 0; i < 3; ++i)
     {
-        getLineTrimmed(in, line);
+        getTrimmedLine(in, line);
         std::sscanf(line.c_str(), "vertex %e %e %e", &t.vertices[i].x, &t.vertices[i].y, &t.vertices[i].z);
     }
 

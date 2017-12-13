@@ -29,7 +29,7 @@ void trim(std::string& s)
     }));
 }
 
-void getLineTrimmed(std::istream& in, std::string& out)
+void getTrimmedLine(std::istream& in, std::string& out)
 {
     std::getline(in, out);
     trim(out);
