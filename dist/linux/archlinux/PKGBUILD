@@ -2,7 +2,7 @@
 
 _pkgname=stl2thumbnail
 pkgname=stl2thumbnail-git
-pkgver=v0.1.r0.gc4f8966
+pkgver=v0.1.r1.ge58f3f3
 pkgrel=1
 pkgdesc="Allow file managers to geterate thumbnails for stl files"
 arch=("i686" "x86_64")
@@ -35,5 +35,5 @@ prepare() {
 
 package() {
   cd "${_pkgname}/build"
-  make DESTDIR="{$pkgdir}/" install
+  make DESTDIR="${pkgdir}/" install
 }
