@@ -23,6 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class Backend
 {
 public:
-    virtual ~Backend() {}
+    virtual ~Backend()                            = default;
     virtual Picture render(const Mesh& triangles) = 0;
 };

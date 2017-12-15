@@ -33,7 +33,7 @@ float edgeFunction(glm::vec2 p, glm::vec2 a, glm::vec2 b)
     return (p.x - a.x) * (b.y - a.y) - (p.y - a.y) * (b.x - a.x);
 }
 
-glm::vec3 glmMatMulVec3(const glm::mat4x4& mat, glm::vec3 v)
+glm::vec3 glmMat4x4MulVec3(const glm::mat4x4& mat, glm::vec3 v)
 {
     return glm::vec3(mat * glm::vec4{ v.x, v.y, v.z, 1.0f });
 }
@@ -70,9 +70,9 @@ Picture RasterBackend::render(const Mesh& triangles)
     for (const auto& t : triangles)
     {
         // project vertices to screen coordinates
-        auto v0 = glmMatMulVec3(modelViewProj, vec3ToGlm(t.vertices[0]));
-        auto v1 = glmMatMulVec3(modelViewProj, vec3ToGlm(t.vertices[1]));
-        auto v2 = glmMatMulVec3(modelViewProj, vec3ToGlm(t.vertices[2]));
+        auto v0 = glmMat4x4MulVec3(modelViewProj, vec3ToGlm(t.vertices[0]));
+        auto v1 = glmMat4x4MulVec3(modelViewProj, vec3ToGlm(t.vertices[1]));
+        auto v2 = glmMat4x4MulVec3(modelViewProj, vec3ToGlm(t.vertices[2]));
 
         // triangle bounding box
         float minX = std::min(v0.x, std::min(v1.x, v2.x));
