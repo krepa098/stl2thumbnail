@@ -6,9 +6,11 @@ project(stl2thumbnail)
 
 add_subdirectory(libstl)
 
-include_directories(libstl)
-
 set(CMAKE_INCLUDE_CURRENT_DIR true)
+
+find_package(PNG REQUIRED)
+
+include_directories(${PNG_INCLUDE_DIR} libstl)
 
 add_executable (
     ${PROJECT_NAME}
@@ -37,7 +39,7 @@ add_custom_command(
                 ${CMAKE_CURRENT_BINARY_DIR}/stl.thumbnailer
 )
 
-target_link_libraries(${PROJECT_NAME} stl png)
+target_link_libraries(${PROJECT_NAME} ${PNG_LIBRARY} stl)
 
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION "bin")
 install(FILES "dist/linux/stl.thumbnailer" DESTINATION "share/thumbnailers")
