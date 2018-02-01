@@ -60,7 +60,7 @@ Picture RasterBackend::render(const Mesh& triangles)
     auto center        = vec3ToGlm(aabb.center());
 
     // create model view projection matrix
-    const float zoom   = 1.0;
+    const float zoom   = 1.0f;
     auto projection    = glm::ortho(-zoom * .5f, zoom * .5f, -zoom * .5f, zoom * .5f, 0.0001f, 1.0f);
     auto viewPos       = glm::vec3{ 1.f, -1.f, 1.f };
     auto view          = glm::lookAt(viewPos, glm::vec3{ 0.f, 0.f, 0.f }, { 0.f, 0.f, -1.f });

@@ -24,7 +24,7 @@ ZBuffer::ZBuffer(unsigned size)
 {
     m_buffer.resize(size * size);
 
-    for (size_t i = 0; i < m_buffer.size(); ++i)
+    for (std::size_t i = 0; i < m_buffer.size(); ++i)
         m_buffer[i] = std::numeric_limits<float>::infinity();
 }
 
