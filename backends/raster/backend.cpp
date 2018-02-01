@@ -56,15 +56,15 @@ Picture RasterBackend::render(const Mesh& triangles)
 
     // generate AABB and find its center
     auto aabb          = AABBox(triangles);
-    auto largestStride = aabb.largestStride();
-    auto center        = vec3ToGlm(aabb.center()) / largestStride;
+    auto largestStride = aabb.stride();
+    auto center        = vec3ToGlm(aabb.center());
 
     // create model view projection matrix
-    const float zoom   = 0.7f;
-    auto projection    = glm::ortho(-zoom, zoom, -zoom, zoom, 0.001f, 3.0f);
+    const float zoom   = 1.0;
+    auto projection    = glm::ortho(-zoom * .5f, zoom * .5f, -zoom * .5f, zoom * .5f, 0.0001f, 1.0f);
     auto viewPos       = glm::vec3{ 1.f, -1.f, 1.f };
     auto view          = glm::lookAt(viewPos, glm::vec3{ 0.f, 0.f, 0.f }, { 0.f, 0.f, -1.f });
-    auto model         = glm::translate(glm::mat4(1), -center) * glm::scale(glm::mat4(1), glm::vec3{ 1.0f / largestStride });
+    auto model         = glm::scale(glm::mat4(1), glm::vec3{ 1.0f / largestStride }) * glm::translate(glm::mat4(1), -center);
     auto modelViewProj = projection * view * model;
 
     for (const auto& t : triangles)

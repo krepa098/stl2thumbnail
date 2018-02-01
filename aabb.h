@@ -29,9 +29,9 @@ struct AABBox
     AABBox();
     AABBox(const Mesh& triangles);
 
-    float largestStride() const
+    float stride() const
     {
-        return std::max(upper.x - lower.x, std::max(upper.y - lower.y, upper.z - lower.z));
+        return std::sqrt(size().x * size().x + size().y * size().y + size().z * size().z);
     }
 
     Vec3 size() const
