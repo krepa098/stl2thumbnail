@@ -162,8 +162,9 @@ Triangle Parser::readBinaryTriangle(std::ifstream& in) const
     readU16(in); // attributes
 
     // some stl files have garbage normals
-    // we may recalculate them here
-    //t.normal = t.calcNormal().normalize();
+    // we recalculate them here in case they are NaN
+    if (std::isnan(t.normal.x) || std::isnan(t.normal.y) || std::isnan(t.normal.z))
+        t.normal = t.calcNormal().normalize();
 
     return t;
 }
