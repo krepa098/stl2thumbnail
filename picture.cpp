@@ -82,7 +82,6 @@ void Picture::setRGB(unsigned x, unsigned y, float r, float g, float b, float a)
     m_buffer[y * m_stride + x * m_depth + 1] = floatToByte(g);
     m_buffer[y * m_stride + x * m_depth + 2] = floatToByte(b);
     m_buffer[y * m_stride + x * m_depth + 3] = floatToByte(a);
-    ;
 }
 
 void Picture::fill(float r, float g, float b, float a)
