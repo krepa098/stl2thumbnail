@@ -61,9 +61,9 @@ Picture RasterBackend::render(const Mesh& triangles)
 
     // create model view projection matrix
     const float zoom   = 1.0f;
-    auto projection    = glm::ortho(-zoom * .5f, zoom * .5f, -zoom * .5f, zoom * .5f, 0.0001f, 1.0f);
-    auto viewPos       = glm::vec3{ 1.f, -1.f, 1.f };
-    auto view          = glm::lookAt(viewPos, glm::vec3{ 0.f, 0.f, 0.f }, { 0.f, 0.f, -1.f });
+    auto projection    = glm::ortho(zoom * .5f, -zoom * .5f, -zoom * .5f, zoom * .5f, 0.0f, 1.0f);
+    auto viewPos       = glm::vec3{ -1.f, -1.f, 1.f };
+    auto view          = glm::lookAt(viewPos, glm::vec3{ 0.f, 0.f, 0.f }, { 0.f, 0.f, 1.f });
     auto model         = glm::scale(glm::mat4(1), glm::vec3{ 1.0f / largestStride }) * glm::translate(glm::mat4(1), -center);
     auto modelViewProj = projection * view * model;
 
@@ -121,14 +121,15 @@ Picture RasterBackend::render(const Mesh& triangles)
                     {
                         // calculate lightning
                         // diffuse
-                        Vec3 diffColor = std::max(0.0f, dot(t.normal, m_lightPos.normalize())) * m_diffuseColor;
+                        Vec3 s2l       = m_lightPos - Vec3{ px, py, pz };
+                        Vec3 diffColor = std::max(0.0f, dot(t.normal, s2l)) * m_diffuseColor;
 
                         // specular
                         Vec3 fragPos    = { px, py, pz };
                         Vec3 lightDir   = (m_lightPos - fragPos).normalize();
                         Vec3 viewDir    = (Vec3{ viewPos.x, viewPos.y, viewPos.z } - fragPos).normalize();
                         Vec3 reflectDir = reflect(-lightDir, t.normal);
-                        Vec3 specColor  = std::pow(std::max(dot(viewDir, reflectDir), 0.0f), 14.0f) * m_specColor * 0.5f;
+                        Vec3 specColor  = std::pow(std::max(dot(viewDir, reflectDir), 0.0f), 1.0f) * m_specColor * 0.7f;
 
                         // merge
                         Vec3 color = (m_ambientColor + diffColor + specColor) * m_modelColor;

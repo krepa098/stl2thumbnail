@@ -123,7 +123,7 @@ Vec3 Parser::readVector3(std::ifstream& in) const
     Vec3 v;
     v.x = readFloat(in);
     v.y = readFloat(in);
-    v.z = readFloat(in);
+    v.z = -readFloat(in);
 
     return v;
 }
@@ -155,9 +155,10 @@ Triangle Parser::readBinaryTriangle(std::ifstream& in) const
 {
     Triangle t;
 
-    t.normal      = readVector3(in).normalize();
-    t.vertices[0] = readVector3(in);
+    t.normal = readVector3(in).normalize();
+
     t.vertices[1] = readVector3(in);
+    t.vertices[0] = readVector3(in);
     t.vertices[2] = readVector3(in);
     readU16(in); // attributes
 

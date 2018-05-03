@@ -33,9 +33,9 @@ public:
 private:
     unsigned m_size        = 0;
     Vec3 m_modelColor      = { 0 / 255.f, 120 / 255.f, 255 / 255.f };
-    Vec3 m_ambientColor    = { 0.3f, 0.3f, 0.3f };
-    Vec3 m_diffuseColor    = { 0.8f, 0.8f, 0.8f };
-    Vec3 m_specColor       = { 0.9f, 0.9f, 0.9f };
+    Vec3 m_ambientColor    = { 0.4f, 0.4f, 0.4f };
+    Vec3 m_diffuseColor    = { 0.2f, 0.2f, 0.2f };
+    Vec3 m_specColor       = { 0.7f, 0.7f, 0.7f };
     Vec4 m_backgroundColor = { 1.0f, 1.0f, 1.0f, 0.0f };
-    Vec3 m_lightPos        = { 4, -3, 2 };
+    Vec3 m_lightPos        = { 2.0f, 2.0f, 2.5f };
 };
