@@ -1,4 +1,4 @@
 [Thumbnailer Entry]
-TryExec=/usr/bin/stl2thumbnail
-Exec=/usr/bin/stl2thumbnail -s %s %i %o 
+TryExec=/usr/bin/stl2thumbnail-gnome
+Exec=/usr/bin/stl2thumbnail-gnome --width=%s --height=%s --if=%i --of=%o 
 MimeType=application/sla;model/x.stl-ascii;model/x.stl-binary;

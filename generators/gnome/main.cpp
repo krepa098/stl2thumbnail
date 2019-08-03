@@ -28,10 +28,13 @@ int main(int argc, char** argv)
     args::ArgumentParser parser("Creates thumbnails from STL files", "");
     args::HelpFlag help(parser, "help", "Display this help menu", { 'h', "help" });
 
-    args::Group group(parser, "This group is all exclusive:", args::Group::Validators::All);
-    args::Positional<std::string> in(group, "in", "The stl filename");
-    args::Positional<std::string> out(group, "out", "The thumbnail picture filename");
-    args::ValueFlag<unsigned> picSize(group, "size", "The thumbnail size", { 's' });
+    args::Group inputGroup(parser, "Required:", args::Group::Validators::All);
+    args::ValueFlag<std::string> in(inputGroup, "in", "The input stl filename", { "if" });
+    args::ValueFlag<std::string> out(inputGroup, "out", "The output thumbnail picture filename", { "of" });
+
+    args::Group sizeGroup(parser, "All or none:", args::Group::Validators::AllOrNone);
+    args::ValueFlag<unsigned> picWidth(sizeGroup, "width", "The thumbnail width", { "width" }, 512);
+    args::ValueFlag<unsigned> picHeight(sizeGroup, "height", "The thumbnail height", { "height" }, 512);
 
     try
     {
@@ -48,10 +51,11 @@ int main(int argc, char** argv)
         std::cerr << parser;
         return 1;
     }
-    catch (args::ValidationError)
+    catch (args::ValidationError e)
     {
-        std::cout << parser;
-        return 0;
+        std::cerr << e.what() << std::endl;
+        parser.Help(std::cerr);
+        return 1;
     }
 
     // parse STL
@@ -71,7 +75,7 @@ int main(int argc, char** argv)
 
     // render using raster backend
     RasterBackend backend;
-    auto pic = backend.render(picSize.Get(), picSize.Get(), mesh);
+    auto pic = backend.render(picWidth.Get(), picHeight.Get(), mesh);
 
     // save to disk
     pic.save(out.Get());

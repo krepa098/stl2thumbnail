@@ -80,11 +80,10 @@ Picture RasterBackend::render(unsigned imgWidth, unsigned imgHeight, const Mesh&
         float maxY = std::max(v0.y, std::max(v1.y, v2.y));
 
         // bounding box in screen space
-        // TODO: assumes square image
         unsigned sminX = static_cast<unsigned>(std::max(0, static_cast<int>((minX + 1.0f) / 2.0f * imgWidth)));
-        unsigned sminY = static_cast<unsigned>(std::max(0, static_cast<int>((minY + 1.0f) / 2.0f * imgWidth)));
+        unsigned sminY = static_cast<unsigned>(std::max(0, static_cast<int>((minY + 1.0f) / 2.0f * imgHeight)));
         unsigned smaxX = static_cast<unsigned>(std::max(0, std::min(int(imgWidth), static_cast<int>((maxX + 1.0f) / 2.0f * imgWidth))));
-        unsigned smaxY = static_cast<unsigned>(std::max(0, std::min(int(imgWidth), static_cast<int>((maxY + 1.0f) / 2.0f * imgWidth))));
+        unsigned smaxY = static_cast<unsigned>(std::max(0, std::min(int(imgWidth), static_cast<int>((maxY + 1.0f) / 2.0f * imgHeight))));
 
         for (unsigned y = sminY; y < smaxY + 1; ++y)
         {
