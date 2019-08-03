@@ -17,17 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include <vector>
+#include "picture.h"
+#include "triangle.h"
 
-class ZBuffer
+class Backend
 {
 public:
-    ZBuffer(unsigned size);
-
-    bool testAndSet(unsigned x, unsigned y, float z);
-    unsigned size() const;
-
-private:
-    unsigned m_size = 0;
-    std::vector<float> m_buffer;
+    virtual ~Backend()                                                                   = default;
+    virtual Picture render(unsigned imgWidth, unsigned imgHeight, const Mesh& triangles) = 0;
 };

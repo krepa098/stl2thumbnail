@@ -17,12 +17,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include "../picture.h"
-#include "triangle.h"
+#include "../backend.h"
+#include "vec4.h"
 
-class Backend
+// A rasterizer based on
+// https://www.scratchapixel.com/lessons/3d-basic-rendering/rasterization-practical-implementation
+class RasterBackend : public Backend
 {
 public:
-    virtual ~Backend()                            = default;
-    virtual Picture render(const Mesh& triangles) = 0;
+    RasterBackend();
+    ~RasterBackend();
+
+    Picture render(unsigned imgWidth, unsigned imgHeight, const Mesh& triangles);
+
+private:
+    Vec3 m_modelColor      = { 0 / 255.f, 120 / 255.f, 255 / 255.f };
+    Vec3 m_ambientColor    = { 0.4f, 0.4f, 0.4f };
+    Vec3 m_diffuseColor    = { 0.6f, 0.6f, 0.6f };
+    Vec3 m_specColor       = { 0.7f, 0.7f, 0.7f };
+    Vec4 m_backgroundColor = { 1.0f, 1.0f, 1.0f, 0.0f };
+    Vec3 m_lightPos        = { 2.0f, 2.0f, 2.5f };
 };

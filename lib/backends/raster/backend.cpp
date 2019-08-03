@@ -35,12 +35,11 @@ float edgeFunction(glm::vec2 p, glm::vec2 a, glm::vec2 b)
 
 glm::vec3 glmMat4x4MulVec3(const glm::mat4x4& mat, glm::vec3 v)
 {
-    return glm::vec3(mat * glm::vec4{ v.x, v.y, v.z, 1.0f });
+    return glm::vec3(mat * glm::vec4 { v.x, v.y, v.z, 1.0f });
 }
 
 //
-RasterBackend::RasterBackend(unsigned size)
-    : m_size(size)
+RasterBackend::RasterBackend()
 {
 }
 
@@ -48,10 +47,10 @@ RasterBackend::~RasterBackend()
 {
 }
 
-Picture RasterBackend::render(const Mesh& triangles)
+Picture RasterBackend::render(unsigned imgWidth, unsigned imgHeight, const Mesh& triangles)
 {
-    ZBuffer m_zbuffer(m_size);
-    Picture pic(m_size);
+    ZBuffer m_zbuffer(imgWidth, imgHeight);
+    Picture pic(imgWidth, imgHeight);
     pic.fill(m_backgroundColor.x, m_backgroundColor.y, m_backgroundColor.z, m_backgroundColor.w);
 
     // generate AABB and find its center
@@ -62,9 +61,9 @@ Picture RasterBackend::render(const Mesh& triangles)
     // create model view projection matrix
     const float zoom   = 1.0f;
     auto projection    = glm::ortho(zoom * .5f, -zoom * .5f, -zoom * .5f, zoom * .5f, 0.0f, 1.0f);
-    auto viewPos       = glm::vec3{ -1.f, -1.f, 1.f };
-    auto view          = glm::lookAt(viewPos, glm::vec3{ 0.f, 0.f, 0.f }, { 0.f, 0.f, 1.f });
-    auto model         = glm::scale(glm::mat4(1), glm::vec3{ 1.0f / largestStride }) * glm::translate(glm::mat4(1), -center);
+    auto viewPos       = glm::vec3 { -1.f, -1.f, 1.f };
+    auto view          = glm::lookAt(viewPos, glm::vec3 { 0.f, 0.f, 0.f }, { 0.f, 0.f, 1.f });
+    auto model         = glm::scale(glm::mat4(1), glm::vec3 { 1.0f / largestStride }) * glm::translate(glm::mat4(1), -center);
     auto modelViewProj = projection * view * model;
 
     for (const auto& t : triangles)
@@ -81,20 +80,21 @@ Picture RasterBackend::render(const Mesh& triangles)
         float maxY = std::max(v0.y, std::max(v1.y, v2.y));
 
         // bounding box in screen space
-        unsigned sminX = static_cast<unsigned>(std::max(0, static_cast<int>((minX + 1.0f) / 2.0f * m_size)));
-        unsigned sminY = static_cast<unsigned>(std::max(0, static_cast<int>((minY + 1.0f) / 2.0f * m_size)));
-        unsigned smaxX = static_cast<unsigned>(std::max(0, std::min(int(m_size), static_cast<int>((maxX + 1.0f) / 2.0f * m_size))));
-        unsigned smaxY = static_cast<unsigned>(std::max(0, std::min(int(m_size), static_cast<int>((maxY + 1.0f) / 2.0f * m_size))));
+        // TODO: assumes square image
+        unsigned sminX = static_cast<unsigned>(std::max(0, static_cast<int>((minX + 1.0f) / 2.0f * imgWidth)));
+        unsigned sminY = static_cast<unsigned>(std::max(0, static_cast<int>((minY + 1.0f) / 2.0f * imgWidth)));
+        unsigned smaxX = static_cast<unsigned>(std::max(0, std::min(int(imgWidth), static_cast<int>((maxX + 1.0f) / 2.0f * imgWidth))));
+        unsigned smaxY = static_cast<unsigned>(std::max(0, std::min(int(imgWidth), static_cast<int>((maxY + 1.0f) / 2.0f * imgWidth))));
 
         for (unsigned y = sminY; y < smaxY + 1; ++y)
         {
             for (unsigned x = sminX; x < smaxX + 1; ++x)
             {
                 // normalize screen coords [-1,1]
-                const float nx = 2.f * (x / static_cast<float>(m_size) - 0.5f);
-                const float ny = 2.f * (y / static_cast<float>(m_size) - 0.5f);
+                const float nx = 2.f * (x / static_cast<float>(imgWidth) - 0.5f);
+                const float ny = 2.f * (y / static_cast<float>(imgHeight) - 0.5f);
 
-                auto P  = glm::vec2{ nx, ny };
+                auto P  = glm::vec2 { nx, ny };
                 auto V0 = glm::vec2(v0);
                 auto V1 = glm::vec2(v1);
                 auto V2 = glm::vec2(v2);
@@ -121,13 +121,13 @@ Picture RasterBackend::render(const Mesh& triangles)
                     {
                         // calculate lightning
                         // diffuse
-                        Vec3 s2l       = (m_lightPos - Vec3{ px, py, pz }).normalize();
+                        Vec3 s2l       = (m_lightPos - Vec3 { px, py, pz }).normalize();
                         Vec3 diffColor = std::max(0.0f, dot(t.normal, s2l)) * m_diffuseColor;
 
                         // specular
                         Vec3 fragPos    = { px, py, pz };
                         Vec3 lightDir   = (m_lightPos - fragPos).normalize();
-                        Vec3 viewDir    = (Vec3{ viewPos.x, viewPos.y, viewPos.z } - fragPos).normalize();
+                        Vec3 viewDir    = (Vec3 { viewPos.x, viewPos.y, viewPos.z } - fragPos).normalize();
                         Vec3 reflectDir = reflect(-lightDir, t.normal);
                         Vec3 specColor  = std::pow(std::max(dot(viewDir, reflectDir), 0.0f), 4.0f) * m_specColor * 0.7f;
 

@@ -17,25 +17,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include "../backend.h"
-#include "vec4.h"
+#include <vector>
 
-// A rasterizer based on
-// https://www.scratchapixel.com/lessons/3d-basic-rendering/rasterization-practical-implementation
-class RasterBackend : public Backend
+class ZBuffer
 {
 public:
-    RasterBackend(unsigned size);
-    ~RasterBackend();
+    ZBuffer(unsigned width, unsigned height);
 
-    Picture render(const Mesh& triangles);
+    bool testAndSet(unsigned x, unsigned y, float z);
+
+    unsigned width() const;
+    unsigned height() const;
 
 private:
-    unsigned m_size        = 0;
-    Vec3 m_modelColor      = { 0 / 255.f, 120 / 255.f, 255 / 255.f };
-    Vec3 m_ambientColor    = { 0.4f, 0.4f, 0.4f };
-    Vec3 m_diffuseColor    = { 0.6f, 0.6f, 0.6f };
-    Vec3 m_specColor       = { 0.7f, 0.7f, 0.7f };
-    Vec4 m_backgroundColor = { 1.0f, 1.0f, 1.0f, 0.0f };
-    Vec3 m_lightPos        = { 2.0f, 2.0f, 2.5f };
+    unsigned m_width  = 0;
+    unsigned m_height = 0;
+    std::vector<float> m_buffer;
 };

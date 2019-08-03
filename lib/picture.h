@@ -17,27 +17,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
+#include <cstdint>
 #include <string>
 #include <vector>
 
-using Byte   = unsigned char;
+using Byte   = std::uint8_t;
 using Buffer = std::vector<Byte>;
 
 class Picture
 {
 public:
-    Picture(unsigned size);
+    Picture(std::uint32_t width, std::uint32_t height);
 
     Byte* data();
     void save(const std::string& filename);
     void setRGB(unsigned x, unsigned y, Byte r, Byte g, Byte b, Byte a = 255);
     void setRGB(unsigned x, unsigned y, float r, float g, float b, float a = 1.0f);
     void fill(float r, float g, float b, float a);
-    unsigned size() const;
+
+    std::uint32_t width() const;
+    std::uint32_t height() const;
 
 private:
     Buffer m_buffer;
-    unsigned m_size   = 0;
-    unsigned m_depth  = 4; // rgba
-    unsigned m_stride = 0;
+    std::uint32_t m_width  = 0;
+    std::uint32_t m_height = 0;
+    std::uint32_t m_depth  = 4; // rgba
+    std::uint32_t m_stride = 0;
 };

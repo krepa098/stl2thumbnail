@@ -16,11 +16,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <iostream>
-#include <parser.h>
 
 #include "args.hxx"
 #include "backends/raster/backend.h"
 #include "picture.h"
+#include "stl/parser.h"
 
 int main(int argc, char** argv)
 {
@@ -70,8 +70,8 @@ int main(int argc, char** argv)
     std::cout << "Triangles: " << mesh.size() << std::endl;
 
     // render using raster backend
-    RasterBackend backend(picSize.Get());
-    auto pic = backend.render(mesh);
+    RasterBackend backend;
+    auto pic = backend.render(picSize.Get(), picSize.Get(), mesh);
 
     // save to disk
     pic.save(out.Get());
