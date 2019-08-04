@@ -27,6 +27,14 @@ using Buffer = std::vector<Byte>;
 class Picture
 {
 public:
+    struct RGBA
+    {
+        Byte r = 0;
+        Byte g = 0;
+        Byte b = 0;
+        Byte a = 0;
+    };
+
     Picture(std::uint32_t width, std::uint32_t height);
 
     Byte* data();
@@ -34,6 +42,7 @@ public:
     void setRGB(unsigned x, unsigned y, Byte r, Byte g, Byte b, Byte a = 255);
     void setRGB(unsigned x, unsigned y, float r, float g, float b, float a = 1.0f);
     void fill(float r, float g, float b, float a);
+    RGBA pixelRGBA(unsigned x, unsigned y) const;
 
     std::uint32_t width() const;
     std::uint32_t height() const;

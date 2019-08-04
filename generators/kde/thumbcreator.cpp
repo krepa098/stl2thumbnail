@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "picture.h"
 #include "stl/parser.h"
 
+#include <QImage>
 #include <QString>
 
 StlThumbCreator::StlThumbCreator()
@@ -43,7 +44,14 @@ bool StlThumbCreator::create(const QString& path, int width, int height, QImage&
 
     // render using raster backend
     RasterBackend backend;
-    auto pic = backend.render(width, height, mesh);
+    const auto pic = backend.render(width, height, mesh);
+
+    // copy to QImage
+    for (size_t y = 0; y < pic.height(); ++y)
+    {
+        for (size_t x = 0; x < pic.width(); ++x)
+            img.setPixelColor(x, y, qRgba(pic.pixelRGBA(x, y).r, pic.pixelRGBA(x, y).g, pic.pixelRGBA(x, y).b, pic.pixelRGBA(x, y).a));
+    }
 
     return true;
 }

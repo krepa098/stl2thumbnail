@@ -92,6 +92,19 @@ void Picture::fill(float r, float g, float b, float a)
             setRGB(x, y, r, g, b, a);
 }
 
+Picture::RGBA Picture::pixelRGBA(unsigned x, unsigned y) const
+{
+    if (x >= m_width || y >= m_height)
+        return {};
+
+    return {
+        m_buffer[y * m_stride + x * m_depth + 0],
+        m_buffer[y * m_stride + x * m_depth + 1],
+        m_buffer[y * m_stride + x * m_depth + 2],
+        m_buffer[y * m_stride + x * m_depth + 3]
+    };
+}
+
 uint32_t Picture::width() const
 {
     return m_width;
