@@ -4,4 +4,4 @@ Name=STL thumbnailer
 X-KDE-ServiceTypes=ThumbCreator
 MimeType=application/sla;model/x.stl-ascii;model/x.stl-binary;
 CacheThumbnail=true
-X-KDE-Library=stl2thumbnail-kde 
+X-KDE-Library=stl2thumbnail-kde
