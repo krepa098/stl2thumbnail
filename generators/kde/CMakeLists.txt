@@ -28,7 +28,7 @@ add_library(${PROJECT_NAME} MODULE ${SRC_FILES})
 target_link_libraries(${PROJECT_NAME} ${LIBS})
 
 install(TARGETS ${PROJECT_NAME}
-    LIBRARY DESTINATION "lib"
+    DESTINATION "lib"
 )
 
 install(FILES "${CMAKE_SOURCE_DIR}/dist/linux/stl-thumbnailer.desktop" DESTINATION ${SERVICES_INSTALL_DIR})
