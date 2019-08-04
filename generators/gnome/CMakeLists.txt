@@ -34,4 +34,4 @@ install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION "bin"
 )
 
-install(FILES "dist/linux/stl.thumbnailer" DESTINATION "share/thumbnailers")
+install(FILES "${CMAKE_SOURCE_DIR}/dist/linux/stl.thumbnailer" DESTINATION "share/thumbnailers")
