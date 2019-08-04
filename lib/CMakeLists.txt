@@ -11,14 +11,8 @@ include_directories(${PNG_INCLUDE_DIR})
 set(SRC_FILES
     "stl/parser.cpp"
     "picture.cpp"
-    #"picture.h"
     "aabb.cpp"
-    #"aabb.h"
-    #"vec3.h"
-    #"vec4.h"
-    #"triangle.h"
-    #"backends/backend.h"
-    "backends/raster/backend.cpp"
+    "backends/raster/rasterbackend.cpp"
     "backends/raster/zbuffer.cpp"
 )
 

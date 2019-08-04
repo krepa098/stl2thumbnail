@@ -15,12 +15,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "backend.h"
+#include "rasterbackend.h"
 #include "aabb.h"
 #include "zbuffer.h"
 
-#include <glm/glm.hpp>
+#include <array>
 #include <glm/gtc/matrix_transform.hpp>
+#include <limits>
 
 // helpers
 glm::vec3 vec3ToGlm(const Vec3& v)
@@ -53,18 +54,25 @@ Picture RasterBackend::render(unsigned imgWidth, unsigned imgHeight, const Mesh&
     Picture pic(imgWidth, imgHeight);
     pic.fill(m_backgroundColor.x, m_backgroundColor.y, m_backgroundColor.z, m_backgroundColor.w);
 
-    // generate AABB and find its center
-    auto aabb          = AABBox(triangles);
-    auto largestStride = aabb.stride();
-    auto center        = vec3ToGlm(aabb.center());
+    // generate AABB
+    auto aabb = AABBox(triangles);
 
-    // create model view projection matrix
-    const float zoom   = 1.0f;
-    auto projection    = glm::ortho(zoom * .5f, -zoom * .5f, -zoom * .5f, zoom * .5f, 0.0f, 1.0f);
+    // create model view projection matrix (unscaled)
+    const float zoom        = 1.0f;
+    const float aspectRatio = imgWidth / float(imgHeight);
+    auto projection         = glm::ortho(zoom * .5f * aspectRatio, -zoom * .5f * aspectRatio, -zoom * .5f, zoom * .5f, 0.0f, 1.0f);
+
     auto viewPos       = glm::vec3 { -1.f, -1.f, 1.f };
     auto view          = glm::lookAt(viewPos, glm::vec3 { 0.f, 0.f, 0.f }, { 0.f, 0.f, 1.f });
-    auto model         = glm::scale(glm::mat4(1), glm::vec3 { 1.0f / largestStride }) * glm::translate(glm::mat4(1), -center);
+    auto model         = glm::mat4(1);
     auto modelViewProj = projection * view * model;
+
+    // calculate the new model scale
+    auto modelScaleInView = scaleInView(modelViewProj, aabb);
+
+    // recalculate transforms taking the new model scale into account
+    model         = glm::scale(glm::mat4(1), glm::vec3 { 1.0f / modelScaleInView }) * glm::translate(glm::mat4(1), -vec3ToGlm(aabb.center()));
+    modelViewProj = projection * view * model;
 
     for (const auto& t : triangles)
     {
@@ -83,7 +91,7 @@ Picture RasterBackend::render(unsigned imgWidth, unsigned imgHeight, const Mesh&
         unsigned sminX = static_cast<unsigned>(std::max(0, static_cast<int>((minX + 1.0f) / 2.0f * imgWidth)));
         unsigned sminY = static_cast<unsigned>(std::max(0, static_cast<int>((minY + 1.0f) / 2.0f * imgHeight)));
         unsigned smaxX = static_cast<unsigned>(std::max(0, std::min(int(imgWidth), static_cast<int>((maxX + 1.0f) / 2.0f * imgWidth))));
-        unsigned smaxY = static_cast<unsigned>(std::max(0, std::min(int(imgWidth), static_cast<int>((maxY + 1.0f) / 2.0f * imgHeight))));
+        unsigned smaxY = static_cast<unsigned>(std::max(0, std::min(int(imgHeight), static_cast<int>((maxY + 1.0f) / 2.0f * imgHeight))));
 
         for (unsigned y = sminY; y < smaxY + 1; ++y)
         {
@@ -142,4 +150,32 @@ Picture RasterBackend::render(unsigned imgWidth, unsigned imgHeight, const Mesh&
     }
 
     return pic;
+}
+
+float RasterBackend::scaleInView(const glm::mat4& modelViewProj, const AABBox& aabb)
+{
+    // Project the 8 edges of the AABB in screen space
+    std::array<glm::vec3, 8> edges;
+    edges[0] = glmMat4x4MulVec3(modelViewProj, { aabb.lower.x, aabb.lower.y, aabb.lower.z });
+    edges[1] = glmMat4x4MulVec3(modelViewProj, { aabb.upper.x, aabb.lower.y, aabb.lower.z });
+    edges[2] = glmMat4x4MulVec3(modelViewProj, { aabb.lower.x, aabb.upper.y, aabb.lower.z });
+    edges[3] = glmMat4x4MulVec3(modelViewProj, { aabb.upper.x, aabb.upper.y, aabb.lower.z });
+    edges[4] = glmMat4x4MulVec3(modelViewProj, { aabb.lower.x, aabb.lower.y, aabb.upper.z });
+    edges[5] = glmMat4x4MulVec3(modelViewProj, { aabb.upper.x, aabb.lower.y, aabb.upper.z });
+    edges[6] = glmMat4x4MulVec3(modelViewProj, { aabb.lower.x, aabb.upper.y, aabb.upper.z });
+    edges[7] = glmMat4x4MulVec3(modelViewProj, { aabb.upper.x, aabb.upper.y, aabb.upper.z });
+
+    // Calculate a model scaling factor that fits the entire model into the view
+    glm::vec3 emin = glm::vec3 { std::numeric_limits<float>::max() };
+    glm::vec3 emax = glm::vec3 { std::numeric_limits<float>::min() };
+    for (const auto e : edges)
+    {
+        emin.x = std::min(emin.x, e.x);
+        emin.y = std::min(emin.y, e.y);
+
+        emax.x = std::max(emax.x, e.x);
+        emax.y = std::max(emax.y, e.y);
+    }
+
+    return std::max(std::abs(emax.x - emin.x), std::abs(emax.y - emin.y)) * 0.5f;
 }

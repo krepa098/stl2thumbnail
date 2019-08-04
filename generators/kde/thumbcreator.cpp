@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "thumbcreator.h"
 
-#include "backends/raster/backend.h"
+#include "backends/raster/rasterbackend.h"
 #include "picture.h"
 #include "stl/parser.h"
 
