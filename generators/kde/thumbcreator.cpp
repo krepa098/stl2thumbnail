@@ -24,6 +24,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QImage>
 #include <QString>
 
+extern "C"
+{
+    // Factory method
+    Q_DECL_EXPORT ThumbCreator* new_creator()
+    {
+        return new StlThumbCreator();
+    }
+};
+
 StlThumbCreator::StlThumbCreator()
 {
 }
