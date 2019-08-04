@@ -61,13 +61,24 @@ bool Parser::isBinaryFormat(std::ifstream& in) const
 
 Mesh Parser::parseBinary(std::ifstream& in) const
 {
+    // get file size
+    in.seekg(0, in.end);
+    int length = in.tellg();
+
     // skip header
-    in.seekg(HEADER_SIZE);
+    in.seekg(HEADER_SIZE, in.beg);
 
     Mesh triangles;
 
     // get the number of triangles in the stl
     uint32_t triangleCount = readU32(in);
+
+    // do a quick sanity check
+    int nominalLength = triangleCount * sizeof(Triangle) + HEADER_SIZE;
+
+    if (nominalLength > length) // in that case the triangle count is wrong, or the file is missing data
+        return {};
+
     triangles.reserve(triangleCount);
 
     // parse triangles
