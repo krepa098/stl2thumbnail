@@ -19,3 +19,5 @@ set(SRC_FILES
 add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 
 target_link_libraries(${PROJECT_NAME} ${PNG_LIBRARY})
+
+install(TARGETS ${PROJECT_NAME} DESTINATION "lib")
