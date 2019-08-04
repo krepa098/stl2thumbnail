@@ -8,6 +8,7 @@ find_package(KF5KIO REQUIRED)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 
 include(KDEInstallDirs) # provides SERVICES_INSTALL_DIR
+include(KDECMakeSettings)
 
 include_directories(${CMAKE_SOURCE_DIR}/lib)
 
