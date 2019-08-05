@@ -1,7 +1,8 @@
 [Desktop Entry]
 Type=Service
-Name=STL models
+Name=STL Models
 X-KDE-ServiceTypes=ThumbCreator
-MimeType=model/stl;
+MimeType=model/stl;application/sla;model/x.stl-ascii;model/x.stl-binary;
 CacheThumbnail=true
 X-KDE-Library=stl2thumbnail-kde
+ThumbnailerVersion=1
