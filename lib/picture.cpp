@@ -33,7 +33,7 @@ Picture::Picture(uint32_t width, uint32_t height)
     m_buffer.resize(height * m_stride); // rgba 8bit
 }
 
-Byte* Picture::data()
+const Byte* Picture::data() const
 {
     return m_buffer.data();
 }

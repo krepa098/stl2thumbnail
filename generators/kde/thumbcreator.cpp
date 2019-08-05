@@ -49,7 +49,7 @@ bool StlThumbCreator::create(const QString& path, int width, int height, QImage&
 
     // render using raster backend
     RasterBackend backend;
-    auto pic = backend.render(width, height, mesh);
+    const auto pic = backend.render(width, height, mesh);
 
     // copy to QImage
     img = QImage(pic.data(), width, height, pic.stride(), QImage::Format_RGBA8888);
