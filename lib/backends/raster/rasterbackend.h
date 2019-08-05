@@ -32,7 +32,7 @@ public:
     RasterBackend();
     ~RasterBackend();
 
-    Picture render(unsigned imgWidth, unsigned imgHeight, const Mesh& triangles);
+    Picture render(unsigned imgWidth, unsigned imgHeight, const Mesh& triangles) override;
 
 protected:
     float scaleInView(const glm::mat4& modelViewProj, const AABBox& aabb);
@@ -42,6 +42,6 @@ private:
     Vec3 m_ambientColor    = { 0.4f, 0.4f, 0.4f };
     Vec3 m_diffuseColor    = { 0.6f, 0.6f, 0.6f };
     Vec3 m_specColor       = { 0.7f, 0.7f, 0.7f };
-    Vec4 m_backgroundColor = { 1.0f, 1.0f, 1.0f, 1.0f };
+    Vec4 m_backgroundColor = { 1.0f, 1.0f, 1.0f, 0.0f };
     Vec3 m_lightPos        = { 2.0f, 2.0f, 2.5f };
 };
