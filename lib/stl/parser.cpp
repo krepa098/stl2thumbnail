@@ -35,7 +35,7 @@ Mesh Parser::parseFile(const std::string& filename) const
     std::ifstream stream(filename, std::ifstream::in | std::ifstream::binary);
 
     if (!stream)
-        throw("Cannot open file");
+        throw("Cannot open file: " + filename);
 
     if (isBinaryFormat(stream))
         return parseBinary(stream);
