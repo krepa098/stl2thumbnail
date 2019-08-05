@@ -22,13 +22,6 @@ add_executable (
 
 target_link_libraries(${PROJECT_NAME} ${LIBS})
 
-add_custom_command(
-        TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy
-                ${CMAKE_SOURCE_DIR}/dist/linux/stl.thumbnailer
-                ${CMAKE_CURRENT_BINARY_DIR}/stl.thumbnailer
-)
-
 install(TARGETS ${PROJECT_NAME}
     LIBRARY DESTINATION "lib"
     RUNTIME DESTINATION "bin"
