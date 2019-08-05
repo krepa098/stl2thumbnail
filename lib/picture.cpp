@@ -114,3 +114,8 @@ uint32_t Picture::height() const
 {
     return m_height;
 }
+
+uint32_t Picture::stride() const
+{
+    return m_stride;
+}

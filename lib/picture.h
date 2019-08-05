@@ -46,6 +46,7 @@ public:
 
     std::uint32_t width() const;
     std::uint32_t height() const;
+    std::uint32_t stride() const;
 
 private:
     Buffer m_buffer;
