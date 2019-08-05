@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QImage>
 #include <QString>
 
+Q_LOGGING_CATEGORY(LOG_STL_THUMBS, "STLModelThumbs")
+
 extern "C"
 {
     // Factory method
@@ -39,28 +41,18 @@ StlThumbCreator::StlThumbCreator()
 
 bool StlThumbCreator::create(const QString& path, int width, int height, QImage& img)
 {
+    //qCDebug(LOG_STL_THUMBS) << "Creating thumbnail for " << path;
+
     stl::Parser stlParser;
     Mesh mesh;
-    try
-    {
-        mesh = stlParser.parseFile(path.toStdString());
-    }
-    catch (...)
-    {
-        std::cerr << "Cannot parse file " << path.toStdString();
-        return false;
-    }
+    mesh = stlParser.parseFile(path.toStdString());
 
     // render using raster backend
     RasterBackend backend;
-    const auto pic = backend.render(width, height, mesh);
+    auto pic = backend.render(width, height, mesh);
 
     // copy to QImage
-    for (size_t y = 0; y < pic.height(); ++y)
-    {
-        for (size_t x = 0; x < pic.width(); ++x)
-            img.setPixelColor(x, y, qRgba(pic.pixelRGBA(x, y).r, pic.pixelRGBA(x, y).g, pic.pixelRGBA(x, y).b, pic.pixelRGBA(x, y).a));
-    }
+    img = QImage(pic.data(), width, height, pic.stride(), QImage::Format_RGBA8888);
 
     return true;
 }
