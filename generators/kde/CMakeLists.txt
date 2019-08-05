@@ -2,13 +2,16 @@ cmake_minimum_required(VERSION 3.1)
 
 project(stl2thumbnail-kde VERSION 1.0)
 
-find_package(ECM NO_MODULE REQUIRED)
-find_package(KF5KIO REQUIRED)
+find_package(ECM REQUIRED NO_MODULE)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
+find_package(KF5 REQUIRED COMPONENTS KIO)
 
-include(KDEInstallDirs) # provides SERVICES_INSTALL_DIR
+include(FeatureSummary)
+include(WriteBasicConfigVersionFile)
+include(KDEInstallDirs)
 include(KDECMakeSettings)
+include(KDECompilerSettings)
 
 include_directories(${CMAKE_SOURCE_DIR}/lib)
 
@@ -17,17 +20,14 @@ set(SRC_FILES
 )
 
 set(LIBS
-    stl2thumb
-    KF5::KIOCore
-    KF5::KIOFileWidgets
-    KF5::KIOWidgets
-    KF5::KIONTLM
+    PRIVATE stl2thumb
+    PRIVATE KF5::KIOWidgets
 )
 
 add_library(${PROJECT_NAME} MODULE ${SRC_FILES})
 
 target_link_libraries(${PROJECT_NAME} ${LIBS})
 
-install(TARGETS ${PROJECT_NAME} DESTINATION ${KDE_INSTALL_PLUGINDIR})
+install(TARGETS ${PROJECT_NAME} DESTINATION ${PLUGIN_INSTALL_DIR})
 
 install(FILES "${CMAKE_SOURCE_DIR}/dist/linux/stl-thumbnailer.desktop" DESTINATION ${SERVICES_INSTALL_DIR})
