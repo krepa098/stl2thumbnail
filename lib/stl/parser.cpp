@@ -43,7 +43,15 @@ Mesh Parser::parseFile(const std::string& filename) const
     return parseAscii(stream);
 }
 
-bool Parser::isBinaryFormat(std::ifstream& in) const
+Mesh Parser::parseStream(std::istream& in) const
+{
+    if (isBinaryFormat(in))
+        return parseBinary(in);
+    
+    return parseAscii(in);
+}
+
+bool Parser::isBinaryFormat(std::istream& in) const
 {
     // Note: A file starting with "solid" is no indicator for having an ASCII file
     // Some exporters put "solid <name>" in the binary header
@@ -59,7 +67,7 @@ bool Parser::isBinaryFormat(std::ifstream& in) const
     return line.substr(0, 5) != "facet";
 }
 
-Mesh Parser::parseBinary(std::ifstream& in) const
+Mesh Parser::parseBinary(std::istream& in) const
 {
     // get file size
     in.seekg(0, in.end);
@@ -92,7 +100,7 @@ Mesh Parser::parseBinary(std::ifstream& in) const
     return triangles;
 }
 
-Mesh Parser::parseAscii(std::ifstream& in) const
+Mesh Parser::parseAscii(std::istream& in) const
 {
     Mesh triangles;
 
@@ -108,28 +116,28 @@ Mesh Parser::parseAscii(std::ifstream& in) const
     return triangles;
 }
 
-uint32_t Parser::readU32(std::ifstream& in) const
+uint32_t Parser::readU32(std::istream& in) const
 {
     uint32_t v;
     in.read(reinterpret_cast<char*>(&v), sizeof(v));
     return v;
 }
 
-uint16_t Parser::readU16(std::ifstream& in) const
+uint16_t Parser::readU16(std::istream& in) const
 {
     uint16_t v;
     in.read(reinterpret_cast<char*>(&v), sizeof(v));
     return v;
 }
 
-float Parser::readFloat(std::ifstream& in) const
+float Parser::readFloat(std::istream& in) const
 {
     float v;
     in.read(reinterpret_cast<char*>(&v), sizeof(v));
     return v;
 }
 
-Vec3 Parser::readVector3(std::ifstream& in) const
+Vec3 Parser::readVector3(std::istream& in) const
 {
     Vec3 v;
     v.x = readFloat(in);
@@ -139,7 +147,7 @@ Vec3 Parser::readVector3(std::ifstream& in) const
     return v;
 }
 
-Triangle Parser::readAsciiTriangle(std::ifstream& in) const
+Triangle Parser::readAsciiTriangle(std::istream& in) const
 {
     Triangle t;
 
@@ -162,7 +170,7 @@ Triangle Parser::readAsciiTriangle(std::ifstream& in) const
     return t;
 }
 
-Triangle Parser::readBinaryTriangle(std::ifstream& in) const
+Triangle Parser::readBinaryTriangle(std::istream& in) const
 {
     Triangle t;
 
