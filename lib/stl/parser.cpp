@@ -30,17 +30,14 @@ Parser::Parser()
 {
 }
 
-Mesh Parser::parseFile(const std::string& filename) const
+Mesh Parser::parseFile(const std::string &filename) const
 {
-    std::ifstream stream(filename, std::ifstream::in | std::ifstream::binary);
+  std::ifstream stream(filename, std::ifstream::in | std::ifstream::binary);
 
-    if (!stream)
-        throw("Cannot open file: " + filename);
+  if (!stream)
+    throw("Cannot open file: " + filename);
 
-    if (isBinaryFormat(stream))
-        return parseBinary(stream);
-
-    return parseAscii(stream);
+  return parseStream(stream);
 }
 
 Mesh Parser::parseStream(std::istream& in) const
