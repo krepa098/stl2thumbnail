@@ -26,25 +26,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace stl
 {
-Parser::Parser()
+Parser::Parser() {}
+
+Mesh Parser::parseFile(const std::string& filename) const
 {
-}
+    std::ifstream stream(filename, std::ifstream::in | std::ifstream::binary);
 
-Mesh Parser::parseFile(const std::string &filename) const
-{
-  std::ifstream stream(filename, std::ifstream::in | std::ifstream::binary);
+    if (!stream)
+        throw("Cannot open file: " + filename);
 
-  if (!stream)
-    throw("Cannot open file: " + filename);
-
-  return parseStream(stream);
+    return parseStream(stream);
 }
 
 Mesh Parser::parseStream(std::istream& in) const
 {
     if (isBinaryFormat(in))
         return parseBinary(in);
-    
+
     return parseAscii(in);
 }
 
@@ -55,7 +53,8 @@ bool Parser::isBinaryFormat(std::istream& in) const
 
     std::string line;
     getTrimmedLine(in, line); // skip potential string: solid <name>
-    getTrimmedLine(in, line); // has to start with "facet" otherwise it is a binary file
+    getTrimmedLine(
+        in, line); // has to start with "facet" otherwise it is a binary file
 
     // return to begin of file
     in.clear();
@@ -81,7 +80,8 @@ Mesh Parser::parseBinary(std::istream& in) const
     // do a quick sanity check
     int nominalLength = triangleCount * sizeof(Triangle) + HEADER_SIZE;
 
-    if (nominalLength > length) // in that case the triangle count is wrong, or the file is missing data
+    if (nominalLength > length) // in that case the triangle count is wrong, or
+        // the file is missing data
         return {};
 
     triangles.reserve(triangleCount);
@@ -151,14 +151,16 @@ Triangle Parser::readAsciiTriangle(std::istream& in) const
     std::string line;
 
     getTrimmedLine(in, line);
-    std::sscanf(line.c_str(), "facet normal %e %e %e", &t.normal.x, &t.normal.y, &t.normal.z);
+    std::sscanf(line.c_str(), "facet normal %e %e %e", &t.normal.x, &t.normal.y,
+        &t.normal.z);
 
     std::getline(in, line); // outer loop
 
     for (size_t i = 0; i < 3; ++i)
     {
         getTrimmedLine(in, line);
-        std::sscanf(line.c_str(), "vertex %e %e %e", &t.vertices[i].x, &t.vertices[i].y, &t.vertices[i].z);
+        std::sscanf(line.c_str(), "vertex %e %e %e", &t.vertices[i].x,
+            &t.vertices[i].y, &t.vertices[i].z);
     }
 
     std::getline(in, line); // endloop
@@ -185,4 +187,4 @@ Triangle Parser::readBinaryTriangle(std::istream& in) const
 
     return t;
 }
-} // namespace
+} // namespace stl
