@@ -63,7 +63,7 @@ void Picture::save(const std::string& filename)
     fclose(fd);
 }
 
-std::vector<uint8_t> Picture::exportEncoded()
+Buffer Picture::exportEncoded()
 {
     auto png_ptr  = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
     auto info_ptr = png_create_info_struct(png_ptr);
