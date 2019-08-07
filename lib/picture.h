@@ -39,7 +39,7 @@ public:
 
     Byte* data();
     void save(const std::string& filename);
-    std::vector<uint8_t> exportEncoded();
+    Buffer exportEncoded();
     void setRGB(unsigned x, unsigned y, Byte r, Byte g, Byte b, Byte a = 255);
     void setRGB(unsigned x, unsigned y, float r, float g, float b, float a = 1.0f);
     void fill(float r, float g, float b, float a);
