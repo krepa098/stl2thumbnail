@@ -68,7 +68,7 @@ Buffer Picture::exportEncoded()
     auto png_ptr  = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
     auto info_ptr = png_create_info_struct(png_ptr);
 
-    std::vector<uint8_t> encoded;
+    Buffer encoded;
     // This callback will be called each time libpng wants to write an encoded chunk.
     // https://github.com/Prior99/node-libpng/blob/master/native/encode.cpp
     png_set_write_fn(png_ptr, &encoded, [] (png_structp png_ptr, png_bytep data, png_size_t length) {
