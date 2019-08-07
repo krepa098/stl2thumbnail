@@ -72,7 +72,7 @@ Buffer Picture::exportEncoded()
     // This callback will be called each time libpng wants to write an encoded chunk.
     // https://github.com/Prior99/node-libpng/blob/master/native/encode.cpp
     png_set_write_fn(png_ptr, &encoded, [] (png_structp png_ptr, png_bytep data, png_size_t length) {
-        auto encoded = reinterpret_cast<std::vector<uint8_t>*>(png_get_io_ptr(png_ptr));
+        auto encoded = reinterpret_cast<Buffer*>(png_get_io_ptr(png_ptr));
         encoded->insert(encoded->end(), data, data + length);
     }, nullptr);
 
