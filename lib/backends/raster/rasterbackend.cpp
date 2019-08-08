@@ -74,8 +74,14 @@ Picture RasterBackend::render(unsigned imgWidth, unsigned imgHeight, const Mesh&
     model         = glm::scale(glm::mat4(1), glm::vec3 { 1.0f / modelScaleInView }) * glm::translate(glm::mat4(1), -vec3ToGlm(aabb.center()));
     modelViewProj = projection * view * model;
 
+    Vec3 eyeNormal = Vec3 { viewPos.x, viewPos.y, viewPos.z }.normalize();
+
     for (const auto& t : triangles)
     {
+        // backface culling
+        if (dot(eyeNormal, t.normal) > 0.0f)
+            continue;
+
         // project vertices to screen coordinates
         auto v0 = glmMat4x4MulVec3(modelViewProj, vec3ToGlm(t.vertices[0]));
         auto v1 = glmMat4x4MulVec3(modelViewProj, vec3ToGlm(t.vertices[1]));
