@@ -28,19 +28,20 @@ public:
     Parser();
 
     Mesh parseFile(const std::string& filename) const;
+    Mesh parseStream(std::istream& in) const;
 
 private:
-    bool isBinaryFormat(std::ifstream& in) const;
+    bool isBinaryFormat(std::istream& in) const;
 
-    Mesh parseBinary(std::ifstream& in) const;
-    Mesh parseAscii(std::ifstream& in) const;
+    Mesh parseBinary(std::istream& in) const;
+    Mesh parseAscii(std::istream& in) const;
 
-    uint32_t readU32(std::ifstream& in) const;
-    uint16_t readU16(std::ifstream& in) const;
-    float readFloat(std::ifstream& in) const;
+    uint32_t readU32(std::istream& in) const;
+    uint16_t readU16(std::istream& in) const;
+    float readFloat(std::istream& in) const;
 
-    Vec3 readVector3(std::ifstream& in) const;
-    Triangle readBinaryTriangle(std::ifstream& in) const;
-    Triangle readAsciiTriangle(std::ifstream& in) const;
+    Vec3 readVector3(std::istream& in) const;
+    Triangle readBinaryTriangle(std::istream& in) const;
+    Triangle readAsciiTriangle(std::istream& in) const;
 };
 } // namespace
