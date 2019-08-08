@@ -26,9 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace stl
 {
-Parser::Parser()
-{
-}
+Parser::Parser() {}
 
 Mesh Parser::parseFile(const std::string& filename) const
 {
@@ -37,20 +35,26 @@ Mesh Parser::parseFile(const std::string& filename) const
     if (!stream)
         throw("Cannot open file: " + filename);
 
-    if (isBinaryFormat(stream))
-        return parseBinary(stream);
-
-    return parseAscii(stream);
+    return parseStream(stream);
 }
 
-bool Parser::isBinaryFormat(std::ifstream& in) const
+Mesh Parser::parseStream(std::istream& in) const
+{
+    if (isBinaryFormat(in))
+        return parseBinary(in);
+
+    return parseAscii(in);
+}
+
+bool Parser::isBinaryFormat(std::istream& in) const
 {
     // Note: A file starting with "solid" is no indicator for having an ASCII file
     // Some exporters put "solid <name>" in the binary header
 
     std::string line;
     getTrimmedLine(in, line); // skip potential string: solid <name>
-    getTrimmedLine(in, line); // has to start with "facet" otherwise it is a binary file
+    getTrimmedLine(
+        in, line); // has to start with "facet" otherwise it is a binary file
 
     // return to begin of file
     in.clear();
@@ -59,7 +63,7 @@ bool Parser::isBinaryFormat(std::ifstream& in) const
     return line.substr(0, 5) != "facet";
 }
 
-Mesh Parser::parseBinary(std::ifstream& in) const
+Mesh Parser::parseBinary(std::istream& in) const
 {
     // get file size
     in.seekg(0, in.end);
@@ -76,7 +80,8 @@ Mesh Parser::parseBinary(std::ifstream& in) const
     // do a quick sanity check
     int nominalLength = triangleCount * sizeof(Triangle) + HEADER_SIZE;
 
-    if (nominalLength > length) // in that case the triangle count is wrong, or the file is missing data
+    if (nominalLength > length) // in that case the triangle count is wrong, or
+        // the file is missing data
         return {};
 
     triangles.reserve(triangleCount);
@@ -92,7 +97,7 @@ Mesh Parser::parseBinary(std::ifstream& in) const
     return triangles;
 }
 
-Mesh Parser::parseAscii(std::ifstream& in) const
+Mesh Parser::parseAscii(std::istream& in) const
 {
     Mesh triangles;
 
@@ -108,28 +113,28 @@ Mesh Parser::parseAscii(std::ifstream& in) const
     return triangles;
 }
 
-uint32_t Parser::readU32(std::ifstream& in) const
+uint32_t Parser::readU32(std::istream& in) const
 {
     uint32_t v;
     in.read(reinterpret_cast<char*>(&v), sizeof(v));
     return v;
 }
 
-uint16_t Parser::readU16(std::ifstream& in) const
+uint16_t Parser::readU16(std::istream& in) const
 {
     uint16_t v;
     in.read(reinterpret_cast<char*>(&v), sizeof(v));
     return v;
 }
 
-float Parser::readFloat(std::ifstream& in) const
+float Parser::readFloat(std::istream& in) const
 {
     float v;
     in.read(reinterpret_cast<char*>(&v), sizeof(v));
     return v;
 }
 
-Vec3 Parser::readVector3(std::ifstream& in) const
+Vec3 Parser::readVector3(std::istream& in) const
 {
     Vec3 v;
     v.x = readFloat(in);
@@ -139,21 +144,23 @@ Vec3 Parser::readVector3(std::ifstream& in) const
     return v;
 }
 
-Triangle Parser::readAsciiTriangle(std::ifstream& in) const
+Triangle Parser::readAsciiTriangle(std::istream& in) const
 {
     Triangle t;
 
     std::string line;
 
     getTrimmedLine(in, line);
-    std::sscanf(line.c_str(), "facet normal %e %e %e", &t.normal.x, &t.normal.y, &t.normal.z);
+    std::sscanf(line.c_str(), "facet normal %e %e %e", &t.normal.x, &t.normal.y,
+        &t.normal.z);
 
     std::getline(in, line); // outer loop
 
     for (size_t i = 0; i < 3; ++i)
     {
         getTrimmedLine(in, line);
-        std::sscanf(line.c_str(), "vertex %e %e %e", &t.vertices[i].x, &t.vertices[i].y, &t.vertices[i].z);
+        std::sscanf(line.c_str(), "vertex %e %e %e", &t.vertices[i].x,
+            &t.vertices[i].y, &t.vertices[i].z);
     }
 
     std::getline(in, line); // endloop
@@ -162,7 +169,7 @@ Triangle Parser::readAsciiTriangle(std::ifstream& in) const
     return t;
 }
 
-Triangle Parser::readBinaryTriangle(std::ifstream& in) const
+Triangle Parser::readBinaryTriangle(std::istream& in) const
 {
     Triangle t;
 
@@ -180,4 +187,4 @@ Triangle Parser::readBinaryTriangle(std::ifstream& in) const
 
     return t;
 }
-} // namespace
+} // namespace stl

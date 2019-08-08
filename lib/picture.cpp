@@ -63,6 +63,37 @@ void Picture::save(const std::string& filename)
     fclose(fd);
 }
 
+Buffer Picture::exportEncoded()
+{
+    auto png_ptr  = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+    auto info_ptr = png_create_info_struct(png_ptr);
+
+    Buffer encoded;
+    // This callback will be called each time libpng wants to write an encoded chunk.
+    // https://github.com/Prior99/node-libpng/blob/master/native/encode.cpp
+    png_set_write_fn(png_ptr, &encoded, [] (png_structp png_ptr, png_bytep data, png_size_t length) {
+        auto encoded = reinterpret_cast<Buffer*>(png_get_io_ptr(png_ptr));
+        encoded->insert(encoded->end(), data, data + length);
+    }, nullptr);
+
+    png_set_IHDR(png_ptr, info_ptr, m_width, m_height,
+        8, PNG_COLOR_TYPE_RGBA, PNG_INTERLACE_NONE,
+        PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
+    png_write_info(png_ptr, info_ptr);
+
+    for (std::uint32_t row = 0; row < m_height; ++row)
+    {
+        png_write_row(png_ptr, &m_buffer[row * m_stride]);
+    }
+
+    png_write_end(png_ptr, nullptr);
+
+    png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
+    png_destroy_write_struct(&png_ptr, nullptr);
+    
+    return encoded;
+}
+
 void Picture::setRGB(unsigned x, unsigned y, Byte r, Byte g, Byte b, Byte a)
 {
     if (x >= m_width || y >= m_height)
