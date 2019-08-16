@@ -17,6 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
+namespace stl2thumb
+{
+
 struct Vec4
 {
     float x = .0f;
@@ -24,3 +27,5 @@ struct Vec4
     float z = .0f;
     float w = .0f;
 };
+
+} // namespace

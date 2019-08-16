@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QImage>
 #include <QString>
 
+using namespace stl2thumb;
+
 Q_LOGGING_CATEGORY(LOG_STL_THUMBS, "STLModelThumbs")
 
 extern "C"
@@ -43,7 +45,7 @@ bool StlThumbCreator::create(const QString& path, int width, int height, QImage&
 {
     //qCDebug(LOG_STL_THUMBS) << "Creating thumbnail for " << path;
 
-    stl::Parser stlParser;
+    Parser stlParser;
     Mesh mesh;
     mesh = stlParser.parseFile(path.toStdString());
 

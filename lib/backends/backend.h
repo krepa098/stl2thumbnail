@@ -20,9 +20,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "picture.h"
 #include "triangle.h"
 
+namespace stl2thumb
+{
+
 class Backend
 {
 public:
     virtual ~Backend()                                                                   = default;
     virtual Picture render(unsigned imgWidth, unsigned imgHeight, const Mesh& triangles) = 0;
 };
+
+} // namespace

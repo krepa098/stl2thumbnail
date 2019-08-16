@@ -21,6 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <limits>
 
+namespace stl2thumb
+{
+
 struct AABBox
 {
     Vec3 lower;
@@ -44,3 +47,5 @@ struct AABBox
         return lower + size() * 0.5f;
     }
 };
+
+} // namespace

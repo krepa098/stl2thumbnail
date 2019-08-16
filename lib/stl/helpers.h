@@ -20,8 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <algorithm>
 #include <string>
 
-namespace stl
+namespace stl2thumb
 {
+
 void trim(std::string& s)
 {
     s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int c) {
@@ -34,4 +35,5 @@ void getTrimmedLine(std::istream& in, std::string& out)
     std::getline(in, out);
     trim(out);
 }
+
 } // namespace

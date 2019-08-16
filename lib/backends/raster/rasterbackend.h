@@ -22,6 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <glm/glm.hpp>
 
+namespace stl2thumb
+{
+
 class AABBox;
 
 // A rasterizer based on
@@ -45,3 +48,5 @@ private:
     Vec4 m_backgroundColor = { 1.0f, 1.0f, 1.0f, 0.0f };
     Vec3 m_lightPos        = { -11.0f, -8.0f, 5.0f };
 };
+
+} // namespace

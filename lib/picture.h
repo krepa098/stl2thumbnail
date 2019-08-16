@@ -21,6 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <string>
 #include <vector>
 
+namespace stl2thumb
+{
+
 using Byte   = std::uint8_t;
 using Buffer = std::vector<Byte>;
 
@@ -56,3 +59,5 @@ private:
     std::uint32_t m_depth  = 4; // rgba
     std::uint32_t m_stride = 0;
 };
+
+} // namespace

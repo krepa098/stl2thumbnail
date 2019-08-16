@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "picture.h"
 #include "stl/parser.h"
 
+using namespace stl2thumb;
+
 int main(int argc, char** argv)
 {
     // command line
@@ -59,7 +61,7 @@ int main(int argc, char** argv)
     }
 
     // parse STL
-    stl::Parser stlParser;
+    Parser stlParser;
     Mesh mesh;
     try
     {

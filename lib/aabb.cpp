@@ -17,6 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "aabb.h"
 
+namespace stl2thumb
+{
+
 AABBox::AABBox()
 {
 }
@@ -37,3 +40,5 @@ AABBox::AABBox(const Mesh& triangles)
         upper.z = std::max(std::max(upper.z, t.vertices[0].z), std::max(t.vertices[1].z, t.vertices[2].z));
     }
 }
+
+} // namespace

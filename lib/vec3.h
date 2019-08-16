@@ -20,6 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <cmath>
 #include <iostream>
 
+namespace stl2thumb
+{
+
 struct Vec3
 {
     float x = .0f;
@@ -92,3 +95,5 @@ inline Vec3 reflect(const Vec3& i, const Vec3& n)
 {
     return i - 2.0f * dot(n, i) * n;
 }
+
+} // namespace

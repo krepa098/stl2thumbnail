@@ -19,6 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <png.h>
 
+namespace stl2thumb
+{
+
 Byte floatToByte(float v)
 {
     v = std::max(0.0f, std::min(v, 1.0f));
@@ -71,10 +74,12 @@ Buffer Picture::exportEncoded()
     Buffer encoded;
     // This callback will be called each time libpng wants to write an encoded chunk.
     // https://github.com/Prior99/node-libpng/blob/master/native/encode.cpp
-    png_set_write_fn(png_ptr, &encoded, [] (png_structp png_ptr, png_bytep data, png_size_t length) {
-        auto encoded = reinterpret_cast<Buffer*>(png_get_io_ptr(png_ptr));
-        encoded->insert(encoded->end(), data, data + length);
-    }, nullptr);
+    png_set_write_fn(
+        png_ptr, &encoded, [](png_structp png_ptr, png_bytep data, png_size_t length) {
+            auto encoded = reinterpret_cast<Buffer*>(png_get_io_ptr(png_ptr));
+            encoded->insert(encoded->end(), data, data + length);
+        },
+        nullptr);
 
     png_set_IHDR(png_ptr, info_ptr, m_width, m_height,
         8, PNG_COLOR_TYPE_RGBA, PNG_INTERLACE_NONE,
@@ -90,7 +95,7 @@ Buffer Picture::exportEncoded()
 
     png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
     png_destroy_write_struct(&png_ptr, nullptr);
-    
+
     return encoded;
 }
 
@@ -150,3 +155,5 @@ uint32_t Picture::stride() const
 {
     return m_stride;
 }
+
+} // namespace

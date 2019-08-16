@@ -20,8 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../triangle.h"
 #include "../vec3.h"
 
-namespace stl
+namespace stl2thumb
 {
+
 class Parser
 {
 public:
@@ -44,4 +45,5 @@ private:
     Triangle readBinaryTriangle(std::istream& in) const;
     Triangle readAsciiTriangle(std::istream& in) const;
 };
+
 } // namespace

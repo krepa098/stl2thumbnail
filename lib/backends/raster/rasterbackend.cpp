@@ -23,6 +23,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <glm/gtc/matrix_transform.hpp>
 #include <limits>
 
+namespace stl2thumb
+{
+
 // helpers
 inline glm::vec3 vec3ToGlm(const Vec3& v)
 {
@@ -193,3 +196,5 @@ float RasterBackend::scaleInView(const glm::mat4& modelViewProj, const AABBox& a
 
     return std::max(std::abs(emax.x - emin.x), std::abs(emax.y - emin.y)) * 0.5f;
 }
+
+} // namespace

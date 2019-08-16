@@ -22,7 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "vec3.h"
 
-struct Ray;
+namespace stl2thumb
+{
 
 struct Triangle
 {
@@ -49,3 +50,5 @@ struct Triangle
 };
 
 using Mesh = std::vector<Triangle>;
+
+} // namespace

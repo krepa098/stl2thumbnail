@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // STL format specifications: http://www.fabbers.com/tech/STL_Format
 
-namespace stl
+namespace stl2thumb
 {
 Parser::Parser() {}
 
@@ -181,10 +181,10 @@ Triangle Parser::readBinaryTriangle(std::istream& in) const
     readU16(in); // attributes
 
     // some stl files have garbage normals
-    // we recalculate them here in case they are NaN
+    // we recalculate them here in case they are missing (NaN)
     if (std::isnan(t.normal.x) || std::isnan(t.normal.y) || std::isnan(t.normal.z))
         t.normal = t.calcNormal().normalize();
 
     return t;
 }
-} // namespace stl
+} // namespace stl2thumb
