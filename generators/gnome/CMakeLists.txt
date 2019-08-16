@@ -23,8 +23,7 @@ add_executable (
 target_link_libraries(${PROJECT_NAME} ${LIBS})
 
 install(TARGETS ${PROJECT_NAME}
-    LIBRARY DESTINATION "lib"
-    RUNTIME DESTINATION "bin"
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
 install(FILES "stl.thumbnailer" DESTINATION "share/thumbnailers")
