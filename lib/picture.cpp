@@ -41,6 +41,11 @@ const Byte* Picture::data() const
     return m_buffer.data();
 }
 
+std::size_t Picture::dataLength() const
+{
+    return m_buffer.size();
+}
+
 void Picture::save(const std::string& filename)
 {
     auto fd = fopen(filename.c_str(), "wb");

@@ -35,7 +35,14 @@ public:
     RasterBackend();
     ~RasterBackend();
 
-    Picture render(unsigned imgWidth, unsigned imgHeight, const Mesh& triangles) override;
+    /**
+     * @brief render renders a mesh in a picture of given size using a software rasterizer
+     * @param imgWidth
+     * @param imgHeight
+     * @param mesh
+     * @return
+     */
+    Picture render(unsigned imgWidth, unsigned imgHeight, const Mesh& mesh) override;
 
 protected:
     float scaleInView(const glm::mat4& modelViewProj, const AABBox& aabb);

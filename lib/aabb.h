@@ -24,28 +24,46 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace stl2thumb
 {
 
-struct AABBox
+class AABBox
 {
-    Vec3 lower;
-    Vec3 upper;
-
+public:
     AABBox();
-    AABBox(const Mesh& triangles);
 
-    float stride() const
+    /**
+     * @brief AABBox creates an AABB comprising the mesh
+     * @param mesh
+     */
+    AABBox(const Mesh& mesh);
+
+    /**
+     * @brief diagonalLength returns the length of the diagonal
+     * @return
+     */
+    float diagonalLength() const
     {
         return std::sqrt(size().x * size().x + size().y * size().y + size().z * size().z);
     }
 
+    /**
+     * @brief size returns the size of the AABB
+     * @return
+     */
     Vec3 size() const
     {
         return upper - lower;
     }
 
+    /**
+     * @brief center returns the center position of the AABB
+     * @return
+     */
     Vec3 center() const
     {
         return lower + size() * 0.5f;
     }
+
+    Vec3 lower;
+    Vec3 upper;
 };
 
 } // namespace

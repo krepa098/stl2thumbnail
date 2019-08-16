@@ -26,8 +26,16 @@ namespace stl2thumb
 class Backend
 {
 public:
-    virtual ~Backend()                                                                   = default;
-    virtual Picture render(unsigned imgWidth, unsigned imgHeight, const Mesh& triangles) = 0;
+    virtual ~Backend() = default;
+
+    /**
+     * @brief render renders a mesh in a picture of given size
+     * @param imgWidth
+     * @param imgHeight
+     * @param mesh
+     * @return
+     */
+    virtual Picture render(unsigned imgWidth, unsigned imgHeight, const Mesh& mesh) = 0;
 };
 
 } // namespace

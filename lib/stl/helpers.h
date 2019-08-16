@@ -23,6 +23,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace stl2thumb
 {
 
+/**
+ * @brief trim removes all whitespaces from a string
+ * @param s
+ */
 void trim(std::string& s)
 {
     s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int c) {
@@ -30,6 +34,11 @@ void trim(std::string& s)
     }));
 }
 
+/**
+ * @brief getTrimmedLine reads a line and trims it
+ * @param in input stream
+ * @param out trimmed string
+ */
 void getTrimmedLine(std::istream& in, std::string& out)
 {
     std::getline(in, out);

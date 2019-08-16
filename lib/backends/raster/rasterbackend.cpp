@@ -56,14 +56,14 @@ RasterBackend::~RasterBackend()
 {
 }
 
-Picture RasterBackend::render(unsigned imgWidth, unsigned imgHeight, const Mesh& triangles)
+Picture RasterBackend::render(unsigned imgWidth, unsigned imgHeight, const Mesh& mesh)
 {
     ZBuffer m_zbuffer(imgWidth, imgHeight);
     Picture pic(imgWidth, imgHeight);
     pic.fill(m_backgroundColor.x, m_backgroundColor.y, m_backgroundColor.z, m_backgroundColor.w);
 
     // generate AABB
-    auto aabb = AABBox(triangles);
+    auto aabb = AABBox(mesh);
 
     // create model view projection matrix (unscaled)
     const float zoom        = 1.0f;
@@ -86,7 +86,7 @@ Picture RasterBackend::render(unsigned imgWidth, unsigned imgHeight, const Mesh&
     Vec3 eyeNormal = Vec3 { viewPos.x, viewPos.y, viewPos.z }.normalize();
     Vec3 lightPos  = glm2Vec3(glmMat4x4MulVec3(viewProj, vec3ToGlm(m_lightPos))); // in camera space
 
-    for (const auto& t : triangles)
+    for (const auto& t : mesh)
     {
         // backface culling
         if (dot(eyeNormal, t.normal) > 0.0f)

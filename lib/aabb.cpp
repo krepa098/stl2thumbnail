@@ -24,12 +24,12 @@ AABBox::AABBox()
 {
 }
 
-AABBox::AABBox(const Mesh& triangles)
+AABBox::AABBox(const Mesh& mesh)
 {
     lower = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
     upper = { std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min() };
 
-    for (const auto& t : triangles)
+    for (const auto& t : mesh)
     {
         lower.x = std::min(std::min(lower.x, t.vertices[0].x), std::min(t.vertices[1].x, t.vertices[2].x));
         lower.y = std::min(std::min(lower.y, t.vertices[0].y), std::min(t.vertices[1].y, t.vertices[2].y));
