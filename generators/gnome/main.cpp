@@ -31,12 +31,17 @@ int main(int argc, char** argv)
     args::HelpFlag help(parser, "help", "Display this help menu", { 'h', "help" });
 
     args::Group inputGroup(parser, "Required:", args::Group::Validators::All);
-    args::ValueFlag<std::string> in(inputGroup, "in", "The input stl filename", { "if" });
-    args::ValueFlag<std::string> out(inputGroup, "out", "The output thumbnail picture filename", { "of" });
+    args::ValueFlag<std::string> in(inputGroup, "string", "The input stl filename", { "if" });
+    args::ValueFlag<std::string> out(inputGroup, "string", "The output thumbnail picture filename", { "of" });
 
     args::Group sizeGroup(parser, "All or none:", args::Group::Validators::AllOrNone);
-    args::ValueFlag<unsigned> picWidth(sizeGroup, "width", "The thumbnail width", { "width" }, 512);
-    args::ValueFlag<unsigned> picHeight(sizeGroup, "height", "The thumbnail height", { "height" }, 512);
+    args::ValueFlag<unsigned> picWidth(sizeGroup, "uint", "The thumbnail width", { "width" }, 512);
+    args::ValueFlag<unsigned> picHeight(sizeGroup, "uint", "The thumbnail height", { "height" }, 512);
+
+    args::Group colorGroup(parser, "All or none:", args::Group::Validators::AllOrNone);
+    args::ValueFlag<float> r(colorGroup, "float [0,1]", "Red color channel of the model", { "r" });
+    args::ValueFlag<float> g(colorGroup, "float [0,1]", "Green color channel of the model", { "g" });
+    args::ValueFlag<float> b(colorGroup, "float [0,1]", "Blue color channel of the model", { "b" });
 
     try
     {
@@ -77,6 +82,16 @@ int main(int argc, char** argv)
 
     // render using raster backend
     RasterBackend backend;
+
+    // model color
+    if (colorGroup && colorGroup.MatchedChildren() > 0)
+    {
+        backend.modelColor = {
+            r.Get(), g.Get(), b.Get()
+        };
+    }
+
+    // render
     auto pic = backend.render(picWidth.Get(), picHeight.Get(), mesh);
 
     // save to disk
