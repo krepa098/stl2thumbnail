@@ -23,10 +23,7 @@ ZBuffer::ZBuffer(unsigned width, unsigned height)
     : m_width(width)
     , m_height(height)
 {
-    m_buffer.resize(width * height);
-
-    for (std::size_t i = 0; i < m_buffer.size(); ++i)
-        m_buffer[i] = std::numeric_limits<float>::infinity();
+    m_buffer.resize(width * height, std::numeric_limits<float>::max());
 }
 
 bool ZBuffer::testAndSet(unsigned x, unsigned y, float z)

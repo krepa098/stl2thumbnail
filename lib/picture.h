@@ -27,17 +27,35 @@ namespace stl2thumb
 using Byte   = std::uint8_t;
 using Buffer = std::vector<Byte>;
 
+struct RGBA
+{
+    Byte r = 0;
+    Byte g = 0;
+    Byte b = 0;
+    Byte a = 0;
+
+    RGBA() {}
+
+    RGBA(Byte r, Byte g, Byte b, Byte a)
+        : r(r)
+        , g(g)
+        , b(b)
+        , a(a)
+    {
+    }
+
+    RGBA(float r, float g, float b, float a)
+        : r(std::max(0.0f, std::min(r, 1.0f)) * 255.0f)
+        , g(std::max(0.0f, std::min(g, 1.0f)) * 255.0f)
+        , b(std::max(0.0f, std::min(b, 1.0f)) * 255.0f)
+        , a(std::max(0.0f, std::min(a, 1.0f)) * 255.0f)
+    {
+    }
+};
+
 class Picture
 {
 public:
-    struct RGBA
-    {
-        Byte r = 0;
-        Byte g = 0;
-        Byte b = 0;
-        Byte a = 0;
-    };
-
     /**
      * @brief Picture creates a black picture of given size
      * @param width the width of the image
@@ -71,26 +89,12 @@ public:
     Buffer exportEncoded();
 
     /**
-     * @brief setRGB sets a given pixel of the picture
+     * @brief setPixel sets a pixel to a given value
      * @param x the x position
      * @param y the y position
-     * @param r the red color
-     * @param g the green color
-     * @param b the blue color
-     * @param a the alpha color
+     * @param color the pixel color
      */
-    void setRGB(unsigned x, unsigned y, Byte r, Byte g, Byte b, Byte a = 255);
-
-    /**
-     * @brief setRGB sets a given pixel of the picture
-     * @param x the x position
-     * @param y the y position
-     * @param r the red color
-     * @param g the green color
-     * @param b the blue color
-     * @param a the alpha color
-     */
-    void setRGB(unsigned x, unsigned y, float r, float g, float b, float a = 1.0f);
+    void setPixel(unsigned x, unsigned y, RGBA color);
 
     /**
      * @brief fill fills the entire picture with a given color
@@ -99,15 +103,15 @@ public:
      * @param b the blue color
      * @param a the alpha color
      */
-    void fill(float r, float g, float b, float a);
+    void fill(RGBA color);
 
     /**
-     * @brief pixelRGBA returns the pixel color at a given position
+     * @brief pixel returns the pixel color at a given position
      * @param x the x position
      * @param y the y position
      * @return
      */
-    RGBA pixelRGBA(unsigned x, unsigned y) const;
+    RGBA pixel(unsigned x, unsigned y) const;
 
     /**
      * @brief width returns the width of the picture

@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../backend.h"
 #include "vec4.h"
 
-#include <glm/glm.hpp>
+#include <glm/mat4x4.hpp>
 
 namespace stl2thumb
 {
@@ -46,14 +46,6 @@ public:
 
 protected:
     float scaleInView(const glm::mat4& modelViewProj, const AABBox& aabb);
-
-private:
-    Vec3 m_modelColor      = { 0 / 255.f, 120 / 255.f, 255 / 255.f };
-    Vec3 m_ambientColor    = { 0.5f, 0.5f, 0.5f };
-    Vec3 m_diffuseColor    = { 0.7f, 0.7f, 0.7f };
-    Vec3 m_specColor       = { 0.7f, 0.7f, 0.7f };
-    Vec4 m_backgroundColor = { 1.0f, 1.0f, 1.0f, 0.0f };
-    Vec3 m_lightPos        = { -11.0f, -8.0f, 5.0f };
 };
 
 } // namespace

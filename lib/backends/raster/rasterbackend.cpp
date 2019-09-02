@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "zbuffer.h"
 
 #include <array>
+#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <limits>
 
@@ -60,7 +61,7 @@ Picture RasterBackend::render(unsigned imgWidth, unsigned imgHeight, const Mesh&
 {
     ZBuffer m_zbuffer(imgWidth, imgHeight);
     Picture pic(imgWidth, imgHeight);
-    pic.fill(m_backgroundColor.x, m_backgroundColor.y, m_backgroundColor.z, m_backgroundColor.w);
+    pic.fill({ backgroundColor.x, backgroundColor.y, backgroundColor.z, backgroundColor.w });
 
     // generate AABB
     auto aabb = AABBox(mesh);
@@ -70,8 +71,7 @@ Picture RasterBackend::render(unsigned imgWidth, unsigned imgHeight, const Mesh&
     const float aspectRatio = imgWidth / float(imgHeight);
     auto projection         = glm::ortho(zoom * .5f * aspectRatio, -zoom * .5f * aspectRatio, -zoom * .5f, zoom * .5f, 0.0f, 1.0f);
 
-    auto viewPos       = glm::vec3 { -1.f, -1.f, 1.f };
-    auto view          = glm::lookAt(viewPos, glm::vec3 { 0.f, 0.f, 0.f }, { 0.f, 0.f, 1.f });
+    auto view          = glm::lookAt(vec3ToGlm(viewPos), glm::vec3 { 0.f, 0.f, 0.f }, { 0.f, 0.f, -1.f });
     auto model         = glm::mat4(1);
     auto modelViewProj = projection * view * model;
     auto viewProj      = projection * view;
@@ -83,13 +83,13 @@ Picture RasterBackend::render(unsigned imgWidth, unsigned imgHeight, const Mesh&
     model         = glm::scale(glm::mat4(1), glm::vec3 { 1.0f / modelScaleInView }) * glm::translate(glm::mat4(1), -vec3ToGlm(aabb.center()));
     modelViewProj = projection * view * model;
 
-    Vec3 eyeNormal = Vec3 { viewPos.x, viewPos.y, viewPos.z }.normalize();
-    Vec3 lightPos  = glm2Vec3(glmMat4x4MulVec3(viewProj, vec3ToGlm(m_lightPos))); // in camera space
+    Vec3 eyeNormal  = Vec3 { viewPos.x, viewPos.y, viewPos.z }.normalize();
+    Vec3 lightPosCS = glm2Vec3(glmMat4x4MulVec3(viewProj, vec3ToGlm(lightPos))); // in camera space
 
     for (const auto& t : mesh)
     {
         // backface culling
-        if (dot(eyeNormal, t.normal) > 0.0f)
+        if (dot(eyeNormal, t.normal) < 0.0f)
             continue;
 
         // project vertices to camera space
@@ -143,23 +143,23 @@ Picture RasterBackend::render(unsigned imgWidth, unsigned imgHeight, const Mesh&
                         (w0 * v0.z + w1 * v1.z + w2 * v2.z)
                     };
 
-                    if (m_zbuffer.testAndSet(x, y, -fragPos.z))
+                    if (m_zbuffer.testAndSet(x, y, fragPos.z))
                     {
                         // calculate lightning
                         // diffuse
-                        Vec3 lightDir  = (lightPos - fragPos).normalize();
-                        Vec3 diffColor = std::max(0.0f, dot(t.normal, lightDir)) * m_diffuseColor;
+                        Vec3 lightDir  = (lightPosCS - fragPos).normalize();
+                        Vec3 diffColor = std::max(0.0f, dot(t.normal, lightDir)) * diffuseColor;
 
                         // specular
-                        Vec3 viewDir    = -(fragPos).normalize();
+                        Vec3 viewDir    = (fragPos).normalize();
                         Vec3 reflectDir = reflect(-lightDir, n);
-                        Vec3 specColor  = std::pow(std::max(dot(viewDir, reflectDir), 0.0f), 16.0f) * m_specColor;
+                        Vec3 specColor  = std::pow(std::max(dot(viewDir, reflectDir), 0.0f), 16.0f) * specularColor;
 
                         // merge
-                        Vec3 color = (m_ambientColor + diffColor + specColor) * m_modelColor;
+                        Vec3 color = (ambientColor + diffColor + specColor) * modelColor;
 
                         // output pixel color
-                        pic.setRGB(x, y, color.x, color.y, color.z);
+                        pic.setPixel(x, y, { color.x, color.y, color.z, 1.0f });
                     }
                 }
             }

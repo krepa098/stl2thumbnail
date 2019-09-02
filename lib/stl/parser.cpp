@@ -53,8 +53,7 @@ bool Parser::isBinaryFormat(std::istream& in) const
 
     std::string line;
     getTrimmedLine(in, line); // skip potential string: solid <name>
-    getTrimmedLine(
-        in, line); // has to start with "facet" otherwise it is a binary file
+    getTrimmedLine(in, line); // has to start with "facet" otherwise it is a binary file
 
     // return to begin of file
     in.clear();
@@ -136,12 +135,11 @@ float Parser::readFloat(std::istream& in) const
 
 Vec3 Parser::readVector3(std::istream& in) const
 {
-    Vec3 v;
-    v.x = readFloat(in);
-    v.y = readFloat(in);
-    v.z = -readFloat(in);
-
-    return v;
+    return {
+        readFloat(in),
+        readFloat(in),
+        readFloat(in)
+    };
 }
 
 Triangle Parser::readAsciiTriangle(std::istream& in) const

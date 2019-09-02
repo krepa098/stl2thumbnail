@@ -17,16 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "picture.h"
 
+#include <fstream>
+#include <iostream>
 #include <png.h>
 
 namespace stl2thumb
 {
-
-Byte floatToByte(float v)
-{
-    v = std::max(0.0f, std::min(v, 1.0f));
-    return Byte(v * 255.0f);
-}
 
 Picture::Picture(uint32_t width, uint32_t height)
     : m_width(width)
@@ -48,27 +44,12 @@ std::size_t Picture::dataLength() const
 
 void Picture::save(const std::string& filename)
 {
-    auto fd = fopen(filename.c_str(), "wb");
+    const auto encoded = exportEncoded();
 
-    auto png_ptr  = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
-    auto info_ptr = png_create_info_struct(png_ptr);
-    png_init_io(png_ptr, fd);
-    png_set_IHDR(png_ptr, info_ptr, m_width, m_height,
-        8, PNG_COLOR_TYPE_RGBA, PNG_INTERLACE_NONE,
-        PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
-    png_write_info(png_ptr, info_ptr);
-
-    for (std::uint32_t row = 0; row < m_height; ++row)
-    {
-        png_write_row(png_ptr, &m_buffer[row * m_stride]);
-    }
-
-    png_write_end(png_ptr, nullptr);
-
-    png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
-    png_destroy_write_struct(&png_ptr, nullptr);
-
-    fclose(fd);
+    std::ofstream file;
+    file.open(filename, std::ios_base::out | std::ios_base::trunc | std::ios_base::binary);
+    file.write(reinterpret_cast<const char*>(encoded.data()), encoded.size());
+    file.close();
 }
 
 Buffer Picture::exportEncoded()
@@ -104,36 +85,25 @@ Buffer Picture::exportEncoded()
     return encoded;
 }
 
-void Picture::setRGB(unsigned x, unsigned y, Byte r, Byte g, Byte b, Byte a)
+void Picture::setPixel(unsigned x, unsigned y, RGBA color)
 {
     if (x >= m_width || y >= m_height)
         return;
 
-    m_buffer[y * m_stride + x * m_depth + 0] = r;
-    m_buffer[y * m_stride + x * m_depth + 1] = g;
-    m_buffer[y * m_stride + x * m_depth + 2] = b;
-    m_buffer[y * m_stride + x * m_depth + 3] = a;
+    m_buffer[y * m_stride + x * m_depth + 0] = color.r;
+    m_buffer[y * m_stride + x * m_depth + 1] = color.g;
+    m_buffer[y * m_stride + x * m_depth + 2] = color.b;
+    m_buffer[y * m_stride + x * m_depth + 3] = color.a;
 }
 
-void Picture::setRGB(unsigned x, unsigned y, float r, float g, float b, float a)
-{
-    if (x >= m_width || y >= m_height)
-        return;
-
-    m_buffer[y * m_stride + x * m_depth + 0] = floatToByte(r);
-    m_buffer[y * m_stride + x * m_depth + 1] = floatToByte(g);
-    m_buffer[y * m_stride + x * m_depth + 2] = floatToByte(b);
-    m_buffer[y * m_stride + x * m_depth + 3] = floatToByte(a);
-}
-
-void Picture::fill(float r, float g, float b, float a)
+void Picture::fill(RGBA color)
 {
     for (unsigned y = 0; y < m_height; ++y)
         for (unsigned x = 0; x < m_width; ++x)
-            setRGB(x, y, r, g, b, a);
+            setPixel(x, y, color);
 }
 
-Picture::RGBA Picture::pixelRGBA(unsigned x, unsigned y) const
+RGBA Picture::pixel(unsigned x, unsigned y) const
 {
     if (x >= m_width || y >= m_height)
         return {};
