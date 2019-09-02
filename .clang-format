@@ -2,3 +2,5 @@ BasedOnStyle: WebKit
 BreakBeforeBraces: Allman
 BreakStringLiterals: 'true'
 AlignConsecutiveAssignments: 'true'
+ColumnLimit: 100
+IndentWidth: 4
