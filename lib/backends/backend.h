@@ -17,9 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
+#include "math.h"
 #include "picture.h"
 #include "triangle.h"
-#include "vec4.h"
 
 namespace stl2thumb
 {

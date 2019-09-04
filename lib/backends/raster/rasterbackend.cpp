@@ -28,11 +28,6 @@ namespace stl2thumb
 {
 
 // helpers
-inline glm::vec3 vec3ToGlm(const Vec3& v)
-{
-    return { v.x, v.y, v.z };
-}
-
 inline float edgeFunction(glm::vec2 p, glm::vec2 a, glm::vec2 b)
 {
     return (p.x - a.x) * (b.y - a.y) - (p.y - a.y) * (b.x - a.x);
@@ -41,11 +36,6 @@ inline float edgeFunction(glm::vec2 p, glm::vec2 a, glm::vec2 b)
 inline glm::vec3 glmMat4x4MulVec3(const glm::mat4x4& mat, glm::vec3 v)
 {
     return glm::vec3(mat * glm::vec4 { v.x, v.y, v.z, 1.0f });
-}
-
-inline Vec3 glm2Vec3(glm::vec3 a)
-{
-    return { a.x, a.y, a.z };
 }
 
 //
@@ -71,7 +61,7 @@ Picture RasterBackend::render(unsigned imgWidth, unsigned imgHeight, const Mesh&
     const float aspectRatio = imgWidth / float(imgHeight);
     auto projection         = glm::ortho(zoom * .5f * aspectRatio, -zoom * .5f * aspectRatio, -zoom * .5f, zoom * .5f, 0.0f, 1.0f);
 
-    auto view          = glm::lookAt(vec3ToGlm(viewPos), glm::vec3 { 0.f, 0.f, 0.f }, { 0.f, 0.f, -1.f });
+    auto view          = glm::lookAt(viewPos, Vec3 { 0.f, 0.f, 0.f }, { 0.f, 0.f, -1.f });
     auto model         = glm::mat4(1);
     auto modelViewProj = projection * view * model;
     auto viewProj      = projection * view;
@@ -80,11 +70,11 @@ Picture RasterBackend::render(unsigned imgWidth, unsigned imgHeight, const Mesh&
     auto modelScaleInView = scaleInView(modelViewProj, aabb);
 
     // recalculate transforms taking the new model scale into account
-    model         = glm::scale(glm::mat4(1), glm::vec3 { 1.0f / modelScaleInView }) * glm::translate(glm::mat4(1), -vec3ToGlm(aabb.center()));
+    model         = glm::scale(glm::mat4(1), Vec3 { 1.0f / modelScaleInView }) * glm::translate(glm::mat4(1), -aabb.center());
     modelViewProj = projection * view * model;
 
-    Vec3 eyeNormal  = Vec3 { viewPos.x, viewPos.y, viewPos.z }.normalize();
-    Vec3 lightPosCS = glm2Vec3(glmMat4x4MulVec3(viewProj, vec3ToGlm(lightPos))); // in camera space
+    Vec3 eyeNormal  = glm::normalize(Vec3 { viewPos.x, viewPos.y, viewPos.z });
+    Vec3 lightPosCS = glmMat4x4MulVec3(viewProj, lightPos); // in camera space
 
     for (const auto& t : mesh)
     {
@@ -93,10 +83,10 @@ Picture RasterBackend::render(unsigned imgWidth, unsigned imgHeight, const Mesh&
             continue;
 
         // project vertices to camera space
-        auto v0 = glmMat4x4MulVec3(modelViewProj, vec3ToGlm(t.vertices[0]));
-        auto v1 = glmMat4x4MulVec3(modelViewProj, vec3ToGlm(t.vertices[1]));
-        auto v2 = glmMat4x4MulVec3(modelViewProj, vec3ToGlm(t.vertices[2]));
-        auto n  = glm2Vec3(glmMat4x4MulVec3(viewProj, vec3ToGlm(t.normal))).normalize();
+        auto v0 = glmMat4x4MulVec3(modelViewProj, t.vertices[0]);
+        auto v1 = glmMat4x4MulVec3(modelViewProj, t.vertices[1]);
+        auto v2 = glmMat4x4MulVec3(modelViewProj, t.vertices[2]);
+        auto n  = glm::normalize(glmMat4x4MulVec3(viewProj, t.normal));
 
         // triangle bounding box
         float minX = std::min(v0.x, std::min(v1.x, v2.x));
@@ -147,19 +137,19 @@ Picture RasterBackend::render(unsigned imgWidth, unsigned imgHeight, const Mesh&
                     {
                         // calculate lightning
                         // diffuse
-                        Vec3 lightDir  = (lightPosCS - fragPos).normalize();
+                        Vec3 lightDir  = glm::normalize(lightPosCS - fragPos);
                         Vec3 diffColor = std::max(0.0f, dot(t.normal, lightDir)) * diffuseColor;
 
                         // specular
-                        Vec3 viewDir    = (fragPos).normalize();
-                        Vec3 reflectDir = reflect(-lightDir, n);
-                        Vec3 specColor  = std::pow(std::max(dot(viewDir, reflectDir), 0.0f), 16.0f) * specularColor;
+                        Vec3 viewDir    = glm::normalize(fragPos);
+                        Vec3 reflectDir = glm::reflect(-lightDir, n);
+                        Vec3 specColor  = glm::pow(std::max(dot(viewDir, reflectDir), 0.0f), 16.0f) * specularColor;
 
                         // merge
                         Vec3 color = (ambientColor + diffColor + specColor) * modelColor;
 
                         // output pixel color
-                        pic.setPixel(x, y, { color.x, color.y, color.z, 1.0f });
+                        pic.setPixel(x, y, { color.r, color.g, color.b, 1.0f });
                     }
                 }
             }
@@ -172,7 +162,7 @@ Picture RasterBackend::render(unsigned imgWidth, unsigned imgHeight, const Mesh&
 float RasterBackend::scaleInView(const glm::mat4& modelViewProj, const AABBox& aabb)
 {
     // Project the 8 edges of the AABB in screen space
-    std::array<glm::vec3, 8> edges;
+    std::array<Vec3, 8> edges;
     edges[0] = glmMat4x4MulVec3(modelViewProj, { aabb.lower.x, aabb.lower.y, aabb.lower.z });
     edges[1] = glmMat4x4MulVec3(modelViewProj, { aabb.upper.x, aabb.lower.y, aabb.lower.z });
     edges[2] = glmMat4x4MulVec3(modelViewProj, { aabb.lower.x, aabb.upper.y, aabb.lower.z });
@@ -183,8 +173,8 @@ float RasterBackend::scaleInView(const glm::mat4& modelViewProj, const AABBox& a
     edges[7] = glmMat4x4MulVec3(modelViewProj, { aabb.upper.x, aabb.upper.y, aabb.upper.z });
 
     // Calculate a model scaling factor that fits the entire model into the view
-    glm::vec3 emin = glm::vec3 { std::numeric_limits<float>::max() };
-    glm::vec3 emax = glm::vec3 { std::numeric_limits<float>::min() };
+    auto emin = Vec3 { std::numeric_limits<float>::max() };
+    auto emax = Vec3 { std::numeric_limits<float>::min() };
     for (const auto e : edges)
     {
         emin.x = std::min(emin.x, e.x);

@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <array>
 #include <vector>
 
-#include "vec3.h"
+#include "math.h"
 
 namespace stl2thumb
 {
@@ -45,7 +45,7 @@ struct Triangle
     {
         Vec3 v0v1 = vertices[1] - vertices[0];
         Vec3 v0v2 = vertices[2] - vertices[0];
-        return cross(v0v1, v0v2);
+        return glm::cross(v0v1, v0v2);
     }
 };
 

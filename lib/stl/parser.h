@@ -17,8 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
+#include "../math.h"
 #include "../triangle.h"
-#include "../vec3.h"
 
 namespace stl2thumb
 {

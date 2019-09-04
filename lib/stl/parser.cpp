@@ -171,7 +171,7 @@ Triangle Parser::readBinaryTriangle(std::istream& in) const
 {
     Triangle t;
 
-    t.normal = readVector3(in).normalize();
+    t.normal = glm::normalize(readVector3(in));
 
     t.vertices[1] = readVector3(in);
     t.vertices[0] = readVector3(in);
@@ -181,7 +181,7 @@ Triangle Parser::readBinaryTriangle(std::istream& in) const
     // some stl files have garbage normals
     // we recalculate them here in case they are missing (NaN)
     if (std::isnan(t.normal.x) || std::isnan(t.normal.y) || std::isnan(t.normal.z))
-        t.normal = t.calcNormal().normalize();
+        t.normal = glm::normalize(t.calcNormal());
 
     return t;
 }

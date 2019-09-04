@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 #include "../backend.h"
-#include "vec4.h"
+#include "math.h"
 
 #include <glm/mat4x4.hpp>
 
