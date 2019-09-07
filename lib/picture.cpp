@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace stl2thumb
 {
 
-Picture::Picture(uint32_t width, uint32_t height)
+Picture::Picture(std::uint32_t width, std::uint32_t height)
     : m_width(width)
     , m_height(height)
     , m_stride(width * m_depth)
@@ -42,12 +42,12 @@ std::size_t Picture::dataLength() const
     return m_buffer.size();
 }
 
-void Picture::save(const std::string& filename)
+void Picture::save(const std::filesystem::path& filepath)
 {
     const auto encoded = exportEncoded();
 
     std::ofstream file;
-    file.open(filename, std::ios_base::out | std::ios_base::trunc | std::ios_base::binary);
+    file.open(filepath, std::ios_base::out | std::ios_base::trunc | std::ios_base::binary);
     file.write(reinterpret_cast<const char*>(encoded.data()), encoded.size());
     file.close();
 }
@@ -85,7 +85,7 @@ Buffer Picture::exportEncoded()
     return encoded;
 }
 
-void Picture::setPixel(unsigned x, unsigned y, RGBA color)
+void Picture::setPixel(std::uint32_t x, std::uint32_t y, RGBA color)
 {
     if (x >= m_width || y >= m_height)
         return;
@@ -103,7 +103,7 @@ void Picture::fill(RGBA color)
             setPixel(x, y, color);
 }
 
-RGBA Picture::pixel(unsigned x, unsigned y) const
+RGBA Picture::pixel(std::uint32_t x, std::uint32_t y) const
 {
     if (x >= m_width || y >= m_height)
         return {};
@@ -116,17 +116,17 @@ RGBA Picture::pixel(unsigned x, unsigned y) const
     };
 }
 
-uint32_t Picture::width() const
+std::uint32_t Picture::width() const
 {
     return m_width;
 }
 
-uint32_t Picture::height() const
+std::uint32_t Picture::height() const
 {
     return m_height;
 }
 
-uint32_t Picture::stride() const
+std::uint32_t Picture::stride() const
 {
     return m_stride;
 }

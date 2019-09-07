@@ -20,6 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../math.h"
 #include "../triangle.h"
 
+#include <filesystem>
+#include <optional>
+
 namespace stl2thumb
 {
 
@@ -28,8 +31,8 @@ class Parser
 public:
     Parser();
 
-    Mesh parseFile(const std::string& filename) const;
-    Mesh parseStream(std::istream& in) const;
+    std::optional<Mesh> parseFile(const std::filesystem::path& filepath) const;
+    std::optional<Mesh> parseStream(std::istream& in) const;
 
 private:
     bool isBinaryFormat(std::istream& in) const;

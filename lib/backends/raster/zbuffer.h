@@ -17,20 +17,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
+#include <cstdint>
 #include <vector>
 
 class ZBuffer
 {
 public:
-    ZBuffer(unsigned width, unsigned height);
+    ZBuffer(std::uint32_t width, std::uint32_t height);
 
-    bool testAndSet(unsigned x, unsigned y, float z);
+    bool testAndSet(std::uint32_t x, std::uint32_t y, float z);
 
-    unsigned width() const;
-    unsigned height() const;
+    std::uint32_t width() const;
+    std::uint32_t height() const;
 
 private:
-    unsigned m_width  = 0;
-    unsigned m_height = 0;
+    std::uint32_t m_width  = 0;
+    std::uint32_t m_height = 0;
     std::vector<float> m_buffer;
 };

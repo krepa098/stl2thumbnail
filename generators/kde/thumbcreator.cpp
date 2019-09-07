@@ -46,12 +46,14 @@ bool StlThumbCreator::create(const QString& path, int width, int height, QImage&
     //qCDebug(LOG_STL_THUMBS) << "Creating thumbnail for " << path;
 
     Parser stlParser;
-    Mesh mesh;
-    mesh = stlParser.parseFile(path.toStdString());
+    auto mesh = stlParser.parseFile(path.toStdString());
+
+    if (!mesh)
+        return false;
 
     // render using raster backend
     RasterBackend backend;
-    const auto pic = backend.render(width, height, mesh);
+    const auto pic = backend.render(width, height, *mesh);
 
     // copy to QImage
     img = QImage(pic.data(), width, height, pic.stride(), QImage::Format_RGBA8888);

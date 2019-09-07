@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <chrono>
 #include <iostream>
 
 #include "args.hxx"
@@ -43,6 +44,9 @@ int main(int argc, char** argv)
     args::ValueFlag<float> g(colorGroup, "float [0,1]", "Green color channel of the model", { "g" });
     args::ValueFlag<float> b(colorGroup, "float [0,1]", "Blue color channel of the model", { "b" });
 
+    args::Group miscGroup(parser, "Any:", args::Group::Validators::DontCare);
+    args::ValueFlag<bool> verbose(miscGroup, "bool (1 or 0)", "Verbose", { "v" });
+
     try
     {
         parser.ParseCLI(argc, argv);
@@ -66,19 +70,15 @@ int main(int argc, char** argv)
     }
 
     // parse STL
-    Parser stlParser;
-    Mesh mesh;
-    try
-    {
-        mesh = stlParser.parseFile(in.Get());
-    }
-    catch (...)
-    {
-        std::cerr << "Cannot parse file " << in.Get();
-        return 1;
-    }
+    const auto startTime = std::chrono::high_resolution_clock::now();
 
-    std::cout << "Triangles: " << mesh.size() << std::endl;
+    Parser stlParser;
+
+    auto mesh = stlParser.parseFile(in.Get());
+    if (!mesh)
+        return 1;
+
+    const auto parseTime = std::chrono::high_resolution_clock::now();
 
     // render using raster backend
     RasterBackend backend;
@@ -92,10 +92,20 @@ int main(int argc, char** argv)
     }
 
     // render
-    auto pic = backend.render(picWidth.Get(), picHeight.Get(), mesh);
+    auto pic = backend.render(picWidth.Get(), picHeight.Get(), *mesh);
+
+    const auto renderTime = std::chrono::high_resolution_clock::now();
 
     // save to disk
     pic.save(out.Get());
+
+    if (verbose)
+    {
+        std::cout << "File: " << in.Get() << std::endl;
+        std::cout << "Triangles: " << mesh->size() << std::endl;
+        std::cout << "Parse time: " << std::chrono::duration_cast<std::chrono::milliseconds>(parseTime - startTime).count() << " ms" << std::endl;
+        std::cout << "Render time: " << std::chrono::duration_cast<std::chrono::milliseconds>(renderTime - parseTime).count() << " ms" << std::endl;
+    }
 
     return 0;
 }

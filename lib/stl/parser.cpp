@@ -28,17 +28,17 @@ namespace stl2thumb
 {
 Parser::Parser() {}
 
-Mesh Parser::parseFile(const std::string& filename) const
+std::optional<Mesh> Parser::parseFile(const std::filesystem::path& filepath) const
 {
-    std::ifstream stream(filename, std::ifstream::in | std::ifstream::binary);
+    std::ifstream stream(filepath, std::ifstream::in | std::ifstream::binary);
 
     if (!stream)
-        throw("Cannot open file: " + filename);
+        return {};
 
     return parseStream(stream);
 }
 
-Mesh Parser::parseStream(std::istream& in) const
+std::optional<Mesh> Parser::parseStream(std::istream& in) const
 {
     if (isBinaryFormat(in))
         return parseBinary(in);
@@ -64,7 +64,7 @@ bool Parser::isBinaryFormat(std::istream& in) const
 
 Mesh Parser::parseBinary(std::istream& in) const
 {
-    // get file size
+    // get stream size
     in.seekg(0, in.end);
     int length = in.tellg();
 

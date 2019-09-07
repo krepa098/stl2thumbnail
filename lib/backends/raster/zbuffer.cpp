@@ -19,14 +19,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <limits>
 
-ZBuffer::ZBuffer(unsigned width, unsigned height)
+ZBuffer::ZBuffer(std::uint32_t width, std::uint32_t height)
     : m_width(width)
     , m_height(height)
 {
     m_buffer.resize(width * height, std::numeric_limits<float>::max());
 }
 
-bool ZBuffer::testAndSet(unsigned x, unsigned y, float z)
+bool ZBuffer::testAndSet(std::uint32_t x, std::uint32_t y, float z)
 {
     if (z < m_buffer[y * m_width + x])
     {
@@ -37,12 +37,12 @@ bool ZBuffer::testAndSet(unsigned x, unsigned y, float z)
     return false;
 }
 
-unsigned ZBuffer::width() const
+std::uint32_t ZBuffer::width() const
 {
     return m_width;
 }
 
-unsigned ZBuffer::height() const
+std::uint32_t ZBuffer::height() const
 {
     return m_height;
 }

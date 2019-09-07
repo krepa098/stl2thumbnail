@@ -17,8 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
+#include <algorithm>
 #include <cstdint>
-#include <string>
+#include <filesystem>
 #include <vector>
 
 namespace stl2thumb
@@ -45,10 +46,10 @@ struct RGBA
     }
 
     RGBA(float r, float g, float b, float a)
-        : r(std::max(0.0f, std::min(r, 1.0f)) * 255.0f)
-        , g(std::max(0.0f, std::min(g, 1.0f)) * 255.0f)
-        , b(std::max(0.0f, std::min(b, 1.0f)) * 255.0f)
-        , a(std::max(0.0f, std::min(a, 1.0f)) * 255.0f)
+        : r(std::clamp(r, 0.0f, 1.0f) * 255.0f)
+        , g(std::clamp(g, 0.0f, 1.0f) * 255.0f)
+        , b(std::clamp(b, 0.0f, 1.0f) * 255.0f)
+        , a(std::clamp(a, 0.0f, 1.0f) * 255.0f)
     {
     }
 };
@@ -80,7 +81,7 @@ public:
      * @brief save writes the picture to a file in png format
      * @param filename
      */
-    void save(const std::string& filename);
+    void save(const std::filesystem::path& filepath);
 
     /**
      * @brief exportEncoded returns a buffer containing the picture encoded as png
@@ -94,7 +95,7 @@ public:
      * @param y the y position
      * @param color the pixel color
      */
-    void setPixel(unsigned x, unsigned y, RGBA color);
+    void setPixel(std::uint32_t x, std::uint32_t y, RGBA color);
 
     /**
      * @brief fill fills the entire picture with a given color
@@ -111,7 +112,7 @@ public:
      * @param y the y position
      * @return
      */
-    RGBA pixel(unsigned x, unsigned y) const;
+    RGBA pixel(std::uint32_t x, std::uint32_t y) const;
 
     /**
      * @brief width returns the width of the picture

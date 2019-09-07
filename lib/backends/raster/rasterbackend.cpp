@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "zbuffer.h"
 
 #include <array>
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <limits>
 
@@ -33,7 +32,7 @@ inline float edgeFunction(glm::vec2 p, glm::vec2 a, glm::vec2 b)
     return (p.x - a.x) * (b.y - a.y) - (p.y - a.y) * (b.x - a.x);
 }
 
-inline glm::vec3 glmMat4x4MulVec3(const glm::mat4x4& mat, glm::vec3 v)
+inline glm::vec3 matMul(const glm::mat4x4& mat, glm::vec3 v)
 {
     return glm::vec3(mat * glm::vec4 { v.x, v.y, v.z, 1.0f });
 }
@@ -61,7 +60,7 @@ Picture RasterBackend::render(unsigned imgWidth, unsigned imgHeight, const Mesh&
     const float aspectRatio = imgWidth / float(imgHeight);
     auto projection         = glm::ortho(zoom * .5f * aspectRatio, -zoom * .5f * aspectRatio, -zoom * .5f, zoom * .5f, 0.0f, 1.0f);
 
-    auto view          = glm::lookAt(viewPos, Vec3 { 0.f, 0.f, 0.f }, { 0.f, 0.f, -1.f });
+    auto view          = glm::lookAt(viewPos, { 0.f, 0.f, 0.f }, { 0.f, 0.f, -1.f });
     auto model         = glm::mat4(1);
     auto modelViewProj = projection * view * model;
     auto viewProj      = projection * view;
@@ -74,7 +73,7 @@ Picture RasterBackend::render(unsigned imgWidth, unsigned imgHeight, const Mesh&
     modelViewProj = projection * view * model;
 
     Vec3 eyeNormal  = glm::normalize(Vec3 { viewPos.x, viewPos.y, viewPos.z });
-    Vec3 lightPosCS = glmMat4x4MulVec3(viewProj, lightPos); // in camera space
+    Vec3 lightPosCS = matMul(viewProj, lightPos); // in camera space
 
     for (const auto& t : mesh)
     {
@@ -83,10 +82,10 @@ Picture RasterBackend::render(unsigned imgWidth, unsigned imgHeight, const Mesh&
             continue;
 
         // project vertices to camera space
-        auto v0 = glmMat4x4MulVec3(modelViewProj, t.vertices[0]);
-        auto v1 = glmMat4x4MulVec3(modelViewProj, t.vertices[1]);
-        auto v2 = glmMat4x4MulVec3(modelViewProj, t.vertices[2]);
-        auto n  = glm::normalize(glmMat4x4MulVec3(viewProj, t.normal));
+        auto v0 = matMul(modelViewProj, t.vertices[0]);
+        auto v1 = matMul(modelViewProj, t.vertices[1]);
+        auto v2 = matMul(modelViewProj, t.vertices[2]);
+        auto n  = glm::normalize(matMul(viewProj, t.normal));
 
         // triangle bounding box
         float minX = std::min(v0.x, std::min(v1.x, v2.x));
@@ -162,15 +161,16 @@ Picture RasterBackend::render(unsigned imgWidth, unsigned imgHeight, const Mesh&
 float RasterBackend::scaleInView(const glm::mat4& modelViewProj, const AABBox& aabb)
 {
     // Project the 8 edges of the AABB in screen space
-    std::array<Vec3, 8> edges;
-    edges[0] = glmMat4x4MulVec3(modelViewProj, { aabb.lower.x, aabb.lower.y, aabb.lower.z });
-    edges[1] = glmMat4x4MulVec3(modelViewProj, { aabb.upper.x, aabb.lower.y, aabb.lower.z });
-    edges[2] = glmMat4x4MulVec3(modelViewProj, { aabb.lower.x, aabb.upper.y, aabb.lower.z });
-    edges[3] = glmMat4x4MulVec3(modelViewProj, { aabb.upper.x, aabb.upper.y, aabb.lower.z });
-    edges[4] = glmMat4x4MulVec3(modelViewProj, { aabb.lower.x, aabb.lower.y, aabb.upper.z });
-    edges[5] = glmMat4x4MulVec3(modelViewProj, { aabb.upper.x, aabb.lower.y, aabb.upper.z });
-    edges[6] = glmMat4x4MulVec3(modelViewProj, { aabb.lower.x, aabb.upper.y, aabb.upper.z });
-    edges[7] = glmMat4x4MulVec3(modelViewProj, { aabb.upper.x, aabb.upper.y, aabb.upper.z });
+    std::array<Vec3, 8> edges = {
+        matMul(modelViewProj, { aabb.lower.x, aabb.lower.y, aabb.lower.z }),
+        matMul(modelViewProj, { aabb.upper.x, aabb.lower.y, aabb.lower.z }),
+        matMul(modelViewProj, { aabb.lower.x, aabb.upper.y, aabb.lower.z }),
+        matMul(modelViewProj, { aabb.upper.x, aabb.upper.y, aabb.lower.z }),
+        matMul(modelViewProj, { aabb.lower.x, aabb.lower.y, aabb.upper.z }),
+        matMul(modelViewProj, { aabb.upper.x, aabb.lower.y, aabb.upper.z }),
+        matMul(modelViewProj, { aabb.lower.x, aabb.upper.y, aabb.upper.z }),
+        matMul(modelViewProj, { aabb.upper.x, aabb.upper.y, aabb.upper.z }),
+    };
 
     // Calculate a model scaling factor that fits the entire model into the view
     auto emin = Vec3 { std::numeric_limits<float>::max() };
