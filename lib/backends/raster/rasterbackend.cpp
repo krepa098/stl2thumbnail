@@ -174,7 +174,7 @@ float RasterBackend::scaleInView(const glm::mat4& modelViewProj, const AABBox& a
 
     // Calculate a model scaling factor that fits the entire model into the view
     auto emin = Vec3 { std::numeric_limits<float>::max() };
-    auto emax = Vec3 { std::numeric_limits<float>::min() };
+    auto emax = Vec3 { std::numeric_limits<float>::lowest() };
     for (const auto e : edges)
     {
         emin.x = std::min(emin.x, e.x);
