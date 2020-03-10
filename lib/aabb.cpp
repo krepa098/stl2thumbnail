@@ -27,7 +27,7 @@ AABBox::AABBox()
 AABBox::AABBox(const Mesh& mesh)
 {
     lower = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
-    upper = { std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min() };
+    upper = { std::numeric_limits<float>::lowest(), std::numeric_limits<float>::lowest(), std::numeric_limits<float>::lowest() };
 
     for (const auto& t : mesh)
     {
