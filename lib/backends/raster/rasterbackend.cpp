@@ -72,13 +72,13 @@ Picture RasterBackend::render(unsigned imgWidth, unsigned imgHeight, const Mesh&
     model         = glm::scale(glm::mat4(1), Vec3 { 1.0f / modelScaleInView }) * glm::translate(glm::mat4(1), -aabb.center());
     modelViewProj = projection * view * model;
 
-    Vec3 eyeNormal  = glm::normalize(Vec3 { viewPos.x, viewPos.y, viewPos.z });
+    Vec3 eyeNormal  = glm::normalize(-Vec3 { viewPos.x, viewPos.y, viewPos.z });
     Vec3 lightPosCS = matMul(viewProj, lightPos); // in camera space
 
     for (const auto& t : mesh)
     {
         // backface culling
-        if (dot(eyeNormal, t.normal) < 0.0f)
+        if (dot(eyeNormal, t.normal) > 0.0f)
             continue;
 
         // project vertices to camera space
@@ -136,13 +136,13 @@ Picture RasterBackend::render(unsigned imgWidth, unsigned imgHeight, const Mesh&
                     {
                         // calculate lightning
                         // diffuse
-                        Vec3 lightDir  = glm::normalize(lightPosCS - fragPos);
+                        Vec3 lightDir  = glm::normalize(fragPos - lightPosCS);
                         Vec3 diffColor = std::max(0.0f, dot(t.normal, lightDir)) * diffuseColor;
 
                         // specular
                         Vec3 viewDir    = glm::normalize(fragPos);
-                        Vec3 reflectDir = glm::reflect(-lightDir, n);
-                        Vec3 specColor  = glm::pow(std::max(dot(viewDir, reflectDir), 0.0f), 16.0f) * specularColor;
+                        Vec3 reflectDir = glm::reflect(lightDir, n);
+                        Vec3 specColor  = glm::pow(std::max(dot(viewDir, reflectDir), 0.0f), 3.0f) * specularColor;
 
                         // merge
                         Vec3 color = (ambientColor + diffColor + specColor) * modelColor;
