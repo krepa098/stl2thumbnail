@@ -45,7 +45,7 @@ int main(int argc, char** argv)
     args::ValueFlag<float> b(colorGroup, "float [0,1]", "Blue color channel of the model", { "b" });
 
     args::Group miscGroup(parser, "Any:", args::Group::Validators::DontCare);
-    args::ValueFlag<bool> verbose(miscGroup, "bool (1 or 0)", "Verbose", { "v" });
+    args::ValueFlag<bool> verbose(miscGroup, "bool {1,0}", "Verbose", { "v" });
 
     try
     {
