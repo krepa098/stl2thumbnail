@@ -43,7 +43,7 @@ public:
     Vec3 diffuseColor    = { 0.7f, 0.7f, 0.7f };
     Vec3 specularColor   = { 0.7f, 0.7f, 0.7f };
     Vec4 backgroundColor = { 1.0f, 1.0f, 1.0f, 0.0f };
-    Vec3 lightPos        = { 11.0f, 4.0f, -5.0f };
+    Vec3 lightPos        = { 1.0f, 1.0f, 0.0f };
     Vec3 viewPos         = { 1.f, 1.f, 1.f };
 };
 
