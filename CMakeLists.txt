@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.16)
 
 option(BUILD_GENERATOR_GNOME "Build the thumbnail generator for Gnome" ON)
 option(BUILD_GENERATOR_KDE "Build the thumbnail generator for KDE" ON)
