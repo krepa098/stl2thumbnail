@@ -5,6 +5,7 @@ project(stl2thumb VERSION 1.0)
 set(CMAKE_INCLUDE_CURRENT_DIR true)
 
 find_package(PNG REQUIRED)
+find_package(glm CONFIG REQUIRED)
 
 include_directories(${PNG_INCLUDE_DIR})
 
@@ -18,7 +19,10 @@ set(SRC_FILES
 
 add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${PNG_LIBRARY})
+# enable GLM_GTX_string_cast related features
+target_compile_definitions(${PROJECT_NAME} PUBLIC GLM_ENABLE_EXPERIMENTAL)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE ${PNG_LIBRARY} glm::glm)
 
 # Install library
 install(TARGETS ${PROJECT_NAME}
